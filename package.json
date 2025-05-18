@@ -1,0 +1,125 @@
+{
+  "name": "tfcloud-itti",
+  "displayName": "tfcloud-itti",
+  "description": "",
+  "version": "0.0.1",
+  "type": "module",
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "./src/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "tfcloudSidebar",
+          "title": "Terraform Cloud",
+          "icon": "media/tf.svg"
+        }
+      ]
+    },
+    "views": {
+      "tfcloudSidebar": [
+        {
+          "id": "tfcloudProjects",
+          "name": "",
+          "icon": "media/tf.svg"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "tfcloud.login",
+        "title": "Terraform Cloud: Iniciar sesión",
+        "icon": {
+          "light": "media/User.svg",
+          "dark": "media/User.svg"
+        }
+      },
+      {
+        "command": "tfcloud.logout",
+        "title": "Terraform Cloud: Cerrar sesión",
+        "icon": {
+          "light": "media/XMark.svg",
+          "dark": "media/XMark.svg"
+        }
+      },
+      {
+        "command": "tfcloud.uploadTfvars",
+        "title": "Terraform Cloud: Subir archivo .tfvars",
+        "icon": {
+          "light": "media/ArrowUpOnSquare.svg",
+          "dark": "media/ArrowUpOnSquare.svg"
+        }
+      },
+      {
+        "command": "tfcloud.downloadTfvars",
+        "title": "Terraform Cloud: Descargar archivo .tfvars",
+        "icon": {
+          "light": "media/ArrowDownOnSquare.svg",
+          "dark": "media/ArrowDownOnSquare.svg"
+        }
+      },
+      {
+        "command": "tfcloud.refresh",
+        "title": "Terraform Cloud: Actualizar lista",
+        "icon": {
+          "light": "media/ArrowPath.svg",
+          "dark": "media/ArrowPath.svg"
+        }
+      }
+    ],
+    "menus": {
+      "view/item/context": [
+        {
+          "command": "tfcloud.uploadTfvars",
+          "when": "viewItem == workspace",
+          "group": "navigation@tfvars",
+          "title": "Subir archivo.tfvars"
+        },
+        {
+          "command": "tfcloud.downloadTfvars",
+          "when": "viewItem == workspace",
+          "group": "navigation@tfvars",
+          "title": "Descargar archivo.tfvars"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "tfcloud.login",
+          "when": "view == tfcloudProjects",
+          "group": "navigation"
+        },
+        {
+          "command": "tfcloud.refresh",
+          "when": "view == tfcloudProjects",
+          "group": "navigation"
+        },
+        {
+          "command": "tfcloud.logout",
+          "when": "view == tfcloudProjects",
+          "group": "navigation"
+        }
+      ]      
+    }
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.100.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "eslint": "^9.25.1",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.5.2"
+  }
+}
