@@ -1,6 +1,5 @@
 import * as vscode from "vscode";
 import { TfCloudTreeProvider } from "./tree/tree-provider.js";
-import { mostrarPanelDeRuns } from "./panels/runs-panel.js";
 import {
   uploadTfvarsToWorkspace,
   downloadTfvarsFromWorkspace,
@@ -9,7 +8,6 @@ import { validateAuth } from "./tfcloud-api.js";
 import { mostrarDetalleDeRun } from "./panels/run-details-panel.js";
 
 let treeProvider;
-let auth = { token: null, organization: null };
 
 async function registerProvider(context) {
   let organization = context.globalState.get("tfcloud.org");
@@ -29,7 +27,8 @@ async function registerProvider(context) {
     });
     if (!token) return;
   }
-
+  // let auth = { token: null, organization: null };
+  // auth = { token, organization };
   const isValid = await validateAuth(organization, token);
   if (!isValid) {
     vscode.window.showErrorMessage("❌ Token inválido o sin permisos.");
@@ -41,8 +40,6 @@ async function registerProvider(context) {
   await context.globalState.update("tfcloud.token", token);
   await context.globalState.update("tfcloud.org", organization);
 
-  auth = { token, organization };
-
   treeProvider = new TfCloudTreeProvider(token, organization);
   const treeView = vscode.window.createTreeView("tfcloudProjects", {
     treeDataProvider: treeProvider,
@@ -53,7 +50,6 @@ async function registerProvider(context) {
   treeView.onDidChangeSelection((e) => {
     const selected = e.selection[0];
     if (selected?.contextValue === "workspace") {
-      // mostrarPanelDeRuns(selected.workspaceId, selected.label, token);
       mostrarDetalleDeRun(selected.workspaceId, selected.label, token);
     }
   });
@@ -122,8 +118,8 @@ export async function activate(context) {
       await context.globalState.update("tfcloud.org", undefined);
 
       if (treeProvider) {
-        treeProvider.updateAuth(null, null); // reset credenciales
-        treeProvider.refresh(); // forzar recarga
+        treeProvider.updateAuth(null, null);
+        treeProvider.refresh();
       }
 
       vscode.window.showInformationMessage(

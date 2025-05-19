@@ -127,42 +127,6 @@ export async function applyRun(runId, token) {
   });
 }
 
-// export async function getPlanDetails(planId, token) {
-//   const res = await fetch(`https://app.terraform.io/api/v2/plans/${planId}/json-output`, {
-//     method: "GET",
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//       "Content-Type": "application/vnd.api+json"
-//     }
-//   });
-
-//   if (!res.ok) {
-//     throw new Error(`Error ${res.status}: ${res.statusText}`);
-//   }
-//   return await res.json();
-// }
-
-// export async function getPlanDetails(planId, token) {
-//   try {
-//     const response = await axios.get(
-//       `https://app.terraform.io/api/v2/plans/${planId}/json-output`,
-//       {
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//           "Content-Type": "application/vnd.api+json"
-//         }
-//       }
-//     );
-
-//     console.log(response)
-//     return response.data;
-//   } catch (error) {
-//     const msg = error.response?.data || error.message;
-//     console.error("❌ Error al obtener JSON output:", msg);
-//     throw new Error(`No se pudo obtener json-output del plan ${planId}`);
-//   }
-// }
-
 export async function getPlanDetails(planId, token) {
   const url = `https://app.terraform.io/api/v2/plans/${planId}/json-output`;
 
