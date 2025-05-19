@@ -1,5 +1,6 @@
 import https from "https";
 import { URL } from "url";
+import axios from "axios";
 
 function makeRequest(path, token) {
   return new Promise((resolve, reject) => {
@@ -124,4 +125,72 @@ export async function applyRun(runId, token) {
     req.on("error", reject);
     req.end();
   });
+}
+
+// export async function getPlanDetails(planId, token) {
+//   const res = await fetch(`https://app.terraform.io/api/v2/plans/${planId}/json-output`, {
+//     method: "GET",
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//       "Content-Type": "application/vnd.api+json"
+//     }
+//   });
+
+//   if (!res.ok) {
+//     throw new Error(`Error ${res.status}: ${res.statusText}`);
+//   }
+//   return await res.json();
+// }
+
+// export async function getPlanDetails(planId, token) {
+//   try {
+//     const response = await axios.get(
+//       `https://app.terraform.io/api/v2/plans/${planId}/json-output`,
+//       {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//           "Content-Type": "application/vnd.api+json"
+//         }
+//       }
+//     );
+
+//     console.log(response)
+//     return response.data;
+//   } catch (error) {
+//     const msg = error.response?.data || error.message;
+//     console.error("❌ Error al obtener JSON output:", msg);
+//     throw new Error(`No se pudo obtener json-output del plan ${planId}`);
+//   }
+// }
+
+export async function getPlanDetails(planId, token) {
+  const url = `https://app.terraform.io/api/v2/plans/${planId}/json-output`;
+
+  const response = await axios.get(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/vnd.api+json",
+    },
+    maxRedirects: 0, // no seguir redirect automáticamente
+    validateStatus: (status) => status >= 200 && status < 400, // acepta 307
+  });
+
+  if (response.status === 200) {
+    return response.data;
+  }
+
+  if (response.status === 307) {
+    const redirectUrl = response.headers.location;
+
+    // Segundo request manual al archivist
+    const archivistRes = await axios.get(redirectUrl, {
+      headers: {
+        "Content-Type": "application/vnd.api+json",
+      },
+    });
+
+    return archivistRes.data;
+  }
+
+  throw new Error(`Error al obtener el plan. Status: ${response.status}`);
 }

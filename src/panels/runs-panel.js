@@ -12,6 +12,7 @@ export function mostrarPanelDeRuns(workspaceId, workspaceName, token) {
   async function updateContent() {
     try {
       const runs = await getRunsForWorkspace(workspaceId, token);
+      
       panel.webview.html = `
         <html>
           <body>

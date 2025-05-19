@@ -1,0 +1,109 @@
+{
+  "id": "run-oXNKTcrnBMKSaRR9",
+  "type": "runs",
+  "attributes": {
+    "actions": {
+      "is-cancelable": true,
+      "is-confirmable": false,
+      "is-discardable": false,
+      "is-force-cancelable": false
+    },
+    "allow-config-generation": true,
+    "allow-empty-apply": false,
+    "auto-apply": false,
+    "canceled-at": null,
+    "created-at": "2025-04-08T14:45:25.369Z",
+    "has-changes": false,
+    "is-destroy": false,
+    "message": "update last changes",
+    "plan-only": false,
+    "refresh": true,
+    "refresh-only": false,
+    "replace-addrs": null,
+    "save-plan": false,
+    "source": "tfe-configuration-version",
+    "status-timestamps": {},
+    "status": "pending",
+    "target-addrs": null,
+    "trigger-reason": "disabled",
+    "terraform-version": "1.9.8",
+    "updated-at": "2025-04-08T14:45:25.369Z",
+    "permissions": {
+      "can-apply": true,
+      "can-cancel": true,
+      "can-comment": true,
+      "can-discard": true,
+      "can-force-execute": true,
+      "can-force-cancel": true,
+      "can-override-policy-check": false
+    },
+    "variables": []
+  },
+  "relationships": {
+    "workspace": {
+      "data": {
+        "id": "ws-jc6AHZvtW7HbsAgb",
+        "type": "workspaces"
+      }
+    },
+    "apply": {
+      "data": {
+        "id": "apply-TFQEtiBg4rcajnGb",
+        "type": "applies"
+      },
+      "links": {
+        "related": "/api/v2/runs/run-oXNKTcrnBMKSaRR9/apply"
+      }
+    },
+    "configuration-version": {
+      "data": {
+        "id": "cv-oQx8vHhpkEhZEdoh",
+        "type": "configuration-versions"
+      },
+      "links": {
+        "related": "/api/v2/runs/run-oXNKTcrnBMKSaRR9/configuration-version"
+      }
+    },
+    "plan": {
+      "data": {
+        "id": "plan-qAZVwxiybjGaDu5n",
+        "type": "plans"
+      },
+      "links": {
+        "related": "/api/v2/runs/run-oXNKTcrnBMKSaRR9/plan"
+      }
+    },
+    "run-events": {
+      "data": [
+        {
+          "id": "re-d2rv7N3xcdZNv7wc",
+          "type": "run-events"
+        }
+      ],
+      "links": {
+        "related": "/api/v2/runs/run-oXNKTcrnBMKSaRR9/run-events"
+      }
+    },
+    "task-stages": {
+      "data": [],
+      "links": {
+        "related": "/api/v2/runs/run-oXNKTcrnBMKSaRR9/task-stages"
+      }
+    },
+    "policy-checks": {
+      "data": [],
+      "links": {
+        "related": "/api/v2/runs/run-oXNKTcrnBMKSaRR9/policy-checks"
+      }
+    },
+    "comments": {
+      "data": [],
+      "links": {
+        "related": "/api/v2/runs/run-oXNKTcrnBMKSaRR9/comments"
+      }
+    }
+  },
+  "links": {
+    "self": "/api/v2/runs/run-oXNKTcrnBMKSaRR9"
+  }
+}

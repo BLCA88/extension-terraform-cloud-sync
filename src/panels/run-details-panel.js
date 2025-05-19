@@ -1,5 +1,9 @@
 import * as vscode from "vscode";
-import { getRunsForWorkspace, applyRun } from "../tfcloud-api.js";
+import {
+  getRunsForWorkspace,
+  applyRun,
+  getPlanDetails,
+} from "../tfcloud-api.js";
 
 export async function mostrarDetalleDeRun(workspaceId, workspaceName, token) {
   const panel = vscode.window.createWebviewPanel(
@@ -12,30 +16,91 @@ export async function mostrarDetalleDeRun(workspaceId, workspaceName, token) {
   async function render() {
     try {
       const runs = await getRunsForWorkspace(workspaceId, token);
-      const run = runs[0];
-
+      let run = runs[0];
       const runId = run.id;
+      console.log(runId);
       const status = run.attributes.status;
       const msg = run.attributes.message || "Sin mensaje";
-      const createdAt = new Date(run.attributes.created_at).toLocaleString();
-      const canApply = status === "planned_and_finished";
+      const updatedAt = run.attributes["updated-at"];
+      const terraformVersion = run.attributes["terraform-version"];
+      const canApply = status === "pending";
+
+      if (run.attributes.status === "pending") {
+        run = runs[1];
+      }
+      const planId = run.relationships?.plan?.data?.id;
+      let planDetailsHtml =
+        "<p class='text-gray-400'>No hay detalles del plan disponibles.</p>";
+
+      if (planId) {
+        try {
+          const plan = await getPlanDetails(planId, token);
+          const changes = plan.resource_changes || [];
+
+          const summary = { add: 0, change: 0, destroy: 0 };
+          changes.forEach((c) => {
+            if (c.change.actions.includes("create")) summary.add++;
+            if (c.change.actions.includes("update")) summary.change++;
+            if (c.change.actions.includes("delete")) summary.destroy++;
+          });
+
+          const summaryLine = `<p class="text-sm text-gray-300 mb-2">📝 ${summary.add} to add, ${summary.change} to change, ${summary.destroy} to destroy</p>`;
+
+          if (changes.length > 0) {
+            planDetailsHtml =
+              summaryLine +
+              `
+              <table class="w-full text-sm text-left mt-2">
+                <thead class="text-gray-300 border-b border-gray-600">
+                  <tr><th>Acción</th><th>Recurso</th><th>Proveedor</th></tr>
+                </thead>
+                <tbody class="text-gray-200">
+                  ${changes
+                    .map(
+                      (c) => `
+                    <tr class="border-b border-gray-800">
+                      <td class="py-1 text-${getActionColor(
+                        c.change.actions[0]
+                      )}-400">${c.change.actions[0]}</td>
+                      <td class="py-1">${c.address}</td>
+                      <td class="py-1">${c.provider_name}</td>
+                    </tr>
+                  `
+                    )
+                    .join("")}
+                </tbody>
+              </table>
+            `;
+          }
+        } catch (err) {
+          planDetailsHtml = `<p class='text-red-400'>Error al obtener el plan: ${err}</p>`;
+        }
+      }
 
       panel.webview.html = `
         <html>
           <head>
-            <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+            <script src="https://cdn.tailwindcss.com"></script>
           </head>
-          <body class="bg-gray-900 text-white p-4 font-mono">
-            <h2 class="text-xl font-bold mb-2">Último run para <span class="text-green-400">${workspaceName}</span></h2>
-            <p class="mb-1"><b>Estado:</b> <span class="text-yellow-400">${status}</span></p>
-            <p class="mb-1"><b>Creado:</b> ${createdAt}</p>
-            <p class="mb-4"><b>Mensaje:</b> ${msg}</p>
+          <body class="bg-gray-900 text-white p-6 font-mono">
+            <h2 class="text-xl font-bold mb-4">Último run para <span class="text-green-400">${workspaceName}</span></h2>
+            <ul class="mb-4">
+              <li><b>Estado:</b> <span class="text-yellow-400">${status}</span></li>
+              <li><b>Actualizado:</b> ${updatedAt}</li>
+              <li><b>Versión Terraform:</b> ${terraformVersion}</li>
+              <li><b>Mensaje:</b> ${msg}</li>
+            </ul>
 
             ${
               canApply
                 ? `<button onclick="apply()" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded">Confirmar Apply</button>`
                 : "<p class='text-gray-400'>Este run no requiere apply manual.</p>"
             }
+
+            <h3 class="mt-6 text-lg font-bold">Cambios en el plan</h3>
+            <div class="mt-2">
+              ${planDetailsHtml}
+            </div>
 
             <script>
               const vscode = acquireVsCodeApi();
@@ -48,6 +113,19 @@ export async function mostrarDetalleDeRun(workspaceId, workspaceName, token) {
       `;
     } catch (err) {
       panel.webview.html = `<html><body class="p-4 bg-black text-red-500">Error al cargar run: ${err}</body></html>`;
+    }
+  }
+
+  function getActionColor(action) {
+    switch (action) {
+      case "create":
+        return "green";
+      case "update":
+        return "yellow";
+      case "delete":
+        return "red";
+      default:
+        return "gray";
     }
   }
 
