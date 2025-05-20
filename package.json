@@ -1,6 +1,6 @@
 {
-  "name": "tfcloud-itti",
-  "displayName": "tfcloud-itti",
+  "name": "terraform-cloud-vars",
+  "displayName": "Terraform Cloud Vars",
   "description": "",
   "version": "0.0.1",
   "type": "module",
@@ -19,7 +19,7 @@
       "activitybar": [
         {
           "id": "tfcloudSidebar",
-          "title": "Terraform Cloud",
+          "title": "%view.container.tfcloudSidebar%",
           "icon": "media/tf.svg"
         }
       ]
@@ -28,7 +28,7 @@
       "tfcloudSidebar": [
         {
           "id": "tfcloudProjects",
-          "name": "",
+          "name": "%view.tfcloudProjects%",
           "icon": "media/tf.svg"
         }
       ]
@@ -36,42 +36,42 @@
     "commands": [
       {
         "command": "tfcloud.login",
-        "title": "Terraform Cloud: Iniciar sesión",
+        "title": "%command.tfcloud.login%",
         "icon": {
-          "light": "media/User.svg",
-          "dark": "media/User.svg"
+          "light": "media/connect-black.svg",
+          "dark": "media/connect-white.svg"
         }
       },
       {
         "command": "tfcloud.logout",
-        "title": "Terraform Cloud: Cerrar sesión",
+        "title": "%command.tfcloud.logout%",
         "icon": {
           "light": "media/XMark.svg",
-          "dark": "media/XMark.svg"
+          "dark": "media/XMark-white.svg"
         }
       },
       {
         "command": "tfcloud.uploadTfvars",
-        "title": "Terraform Cloud: Subir archivo .tfvars",
+        "title": "%command.tfcloud.uploadTfvars%",
         "icon": {
-          "light": "media/ArrowUpOnSquare.svg",
-          "dark": "media/ArrowUpOnSquare.svg"
+          "light": "media/ArrowUp.svg",
+          "dark": "media/ArrowUp-white.svg"
         }
       },
       {
         "command": "tfcloud.downloadTfvars",
-        "title": "Terraform Cloud: Descargar archivo .tfvars",
+        "title": "%command.tfcloud.downloadTfvars%",
         "icon": {
-          "light": "media/ArrowDownOnSquare.svg",
-          "dark": "media/ArrowDownOnSquare.svg"
+          "light": "media/ArrowDownTray.svg",
+          "dark": "media/ArrowDownTray-white.svg"
         }
       },
       {
         "command": "tfcloud.refresh",
-        "title": "Terraform Cloud: Actualizar lista",
+        "title": "%command.tfcloud.refresh%",
         "icon": {
           "light": "media/ArrowPath.svg",
-          "dark": "media/ArrowPath.svg"
+          "dark": "media/ArrowPath-white.svg"
         }
       }
     ],
@@ -81,13 +81,13 @@
           "command": "tfcloud.uploadTfvars",
           "when": "viewItem == workspace",
           "group": "navigation@tfvars",
-          "title": "Subir archivo.tfvars"
+          "title": "%menu.uploadTfvars%"
         },
         {
           "command": "tfcloud.downloadTfvars",
           "when": "viewItem == workspace",
           "group": "navigation@tfvars",
-          "title": "Descargar archivo.tfvars"
+          "title": "%menu.downloadTfvars%"
         }
       ],
       "view/title": [
@@ -123,6 +123,8 @@
     "eslint": "^9.25.1"
   },
   "dependencies": {
-    "axios": "^1.9.0"
+    "axios": "^1.9.0",
+    "handlebars": "^4.7.8"
   }
 }
+

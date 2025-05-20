@@ -4,7 +4,7 @@ import {
   validateAuth,
   getProjects,
   getWorkspacesByProject,
-} from "../tfcloud-api.js";
+} from "../services/tfcloud-api.js";
 
 export class TfCloudTreeProvider {
   constructor(token, organization, onRequestReconnect) {

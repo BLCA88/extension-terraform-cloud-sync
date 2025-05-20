@@ -1,0 +1,13 @@
+{
+  "view.container.tfcloudSidebar": "Terraform Cloud",
+  "view.tfcloudProjects": "Vars",
+
+  "command.tfcloud.login": "Terraform Cloud: Connect",
+  "command.tfcloud.logout": "Terraform Cloud: Disconnect",
+  "command.tfcloud.uploadTfvars": "Terraform Cloud: Upload .tfvars file",
+  "command.tfcloud.downloadTfvars": "Terraform Cloud: Download .tfvars file",
+  "command.tfcloud.refresh": "Terraform Cloud: Refresh",
+
+  "menu.uploadTfvars": "Upload .tfvars file",
+  "menu.downloadTfvars": "Download .tfvars file"
+}

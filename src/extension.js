@@ -4,10 +4,14 @@ import {
   uploadTfvarsToWorkspace,
   downloadTfvarsFromWorkspace,
 } from "./services/tfvars-service.js";
-import { validateAuth } from "./tfcloud-api.js";
+import { validateAuth } from "./services/tfcloud-api.js";
 import { mostrarDetalleDeRun } from "./panels/run-details-panel.js";
+import { i18n } from "./utils/i18n.js";
 
 let treeProvider;
+
+const lang = vscode.env.language.startsWith("es") ? "es" : "en";
+const t = i18n[lang];
 
 async function registerProvider(context) {
   let organization = context.globalState.get("tfcloud.org");
@@ -15,23 +19,22 @@ async function registerProvider(context) {
 
   if (!organization || !token) {
     organization = await vscode.window.showInputBox({
-      prompt: "Nombre de la organización en Terraform Cloud",
+      prompt: t.promptOrg,
       ignoreFocusOut: true,
     });
     if (!organization) return;
 
     token = await vscode.window.showInputBox({
-      prompt: "Token de Terraform Cloud",
+      prompt: t.promptToken,
       password: true,
       ignoreFocusOut: true,
     });
     if (!token) return;
   }
-  // let auth = { token: null, organization: null };
-  // auth = { token, organization };
+
   const isValid = await validateAuth(organization, token);
   if (!isValid) {
-    vscode.window.showErrorMessage("❌ Token inválido o sin permisos.");
+    vscode.window.showErrorMessage(t.invalidToken);
     await context.globalState.update("tfcloud.token", undefined);
     await context.globalState.update("tfcloud.org", undefined);
     return;
@@ -50,7 +53,13 @@ async function registerProvider(context) {
   treeView.onDidChangeSelection((e) => {
     const selected = e.selection[0];
     if (selected?.contextValue === "workspace") {
-      mostrarDetalleDeRun(selected.workspaceId, selected.label, token);
+      mostrarDetalleDeRun(
+        selected.workspaceId,
+        selected.label,
+        token,
+        organization,
+        context.extensionUri
+      );
     }
   });
 
@@ -59,7 +68,7 @@ async function registerProvider(context) {
       const fileUri = await vscode.window.showOpenDialog({
         canSelectMany: false,
         filters: { "Terraform Vars": ["tfvars"] },
-        openLabel: "Seleccionar archivo .tfvars",
+        openLabel: t.uploadLabel,
       });
 
       if (!fileUri) return;
@@ -68,11 +77,9 @@ async function registerProvider(context) {
 
       try {
         await uploadTfvarsToWorkspace(item.workspaceId, filePath, token);
-        vscode.window.showInformationMessage(
-          `✅ Archivo subido a ${item.label}`
-        );
+        vscode.window.showInformationMessage(t.uploadSuccess(item.label));
       } catch (err) {
-        vscode.window.showErrorMessage(`❌ Error al subir: ${err}`);
+        vscode.window.showErrorMessage(t.uploadError(err));
       }
     })
   );
@@ -84,7 +91,7 @@ async function registerProvider(context) {
       const saveUri = await vscode.window.showSaveDialog({
         defaultUri,
         filters: { "Terraform Vars": ["tfvars"] },
-        saveLabel: "Guardar archivo .tfvars",
+        saveLabel: t.downloadLabel,
       });
 
       if (!saveUri) return;
@@ -95,11 +102,9 @@ async function registerProvider(context) {
           saveUri.fsPath,
           token
         );
-        vscode.window.showInformationMessage(
-          `✅ Archivo guardado desde ${item.label}`
-        );
+        vscode.window.showInformationMessage(t.downloadSuccess(item.label));
       } catch (err) {
-        vscode.window.showErrorMessage(`❌ Error al descargar: ${err}`);
+        vscode.window.showErrorMessage(t.downloadError(err));
       }
     })
   );
@@ -122,16 +127,14 @@ export async function activate(context) {
         treeProvider.refresh();
       }
 
-      vscode.window.showInformationMessage(
-        "🔒 Sesión cerrada. Ejecutá 'Iniciar sesión' para reconectar."
-      );
+      vscode.window.showInformationMessage(t.loggedOut);
     })
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand("tfcloud.refresh", async () => {
       if (treeProvider) {
-        vscode.window.showInformationMessage("🔄 Actualizando...");
+        vscode.window.showInformationMessage(t.refreshing);
         treeProvider.refresh();
       }
     })
