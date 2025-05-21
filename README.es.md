@@ -21,18 +21,9 @@
 
 ## 🚀 Primeros pasos
 
-### 1. Instalar la extensión
-
-Desde un archivo `.vsix`:
-
-```bash
-code --install-extension terraform-cloud-sync-0.0.1.vsix
-
-```
-
 ---
 
-### 2. Autenticarse
+### 1. Autenticarse
 
 - Abrí la paleta de comandos (`Ctrl+Shift+P` o `Cmd+Shift+P`)
 - Ejecutá: `Terraform Cloud: Iniciar sesión`
@@ -40,7 +31,7 @@ code --install-extension terraform-cloud-sync-0.0.1.vsix
 
 ---
 
-### 3. Subir o descargar archivos `.tfvars`
+### 2. Subir o descargar archivos `.tfvars`
 
 - Hacé clic derecho sobre un workspace en la barra lateral
 - Elegí una de las opciones:

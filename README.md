@@ -23,19 +23,7 @@
 
 ## 🚀 Getting Started
 
-### 1. Install the extension
-
-From a `.vsix` file:
-
-```bash
-code --install-extension terraform-cloud-sync-0.0.1.vsix
-```
-
-Or from the VSCode Marketplace (if published).
-
----
-
-### 2. Authenticate
+### 1. Authenticate
 
 - Open the Command Palette (Ctrl+Shift+P or Cmd+Shift+P)
 - Run: Terraform Cloud: Iniciar sesión
@@ -43,7 +31,7 @@ Or from the VSCode Marketplace (if published).
 
 ---
 
-### 3. Upload or download `.tfvars`
+### 2. Upload or download `.tfvars`
 
 - Right-click a workspace from the sidebar
 - Choose:
@@ -95,8 +83,7 @@ templates/          → Handlebars HTML templates
 
 ## 👨‍💻 Author
 
-**José Antúnez**  
-GitHub: [@joseantunez](https://github.com/joseantunez)
+**Jose Antúnez**
 
 ---
 

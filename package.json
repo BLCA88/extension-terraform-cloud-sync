@@ -3,6 +3,7 @@
   "displayName": "Terraform Cloud Sync",
   "description": "Sync variables and manage runs from Terraform Cloud workspaces — directly from VSCode.",
   "publisher": "jose-antunez",
+  "icon": "media/tfcloud-sync-logo-min.png",
   "author": {
     "name": "Jose Antúnez",
     "email": "jl.antunez88@gmail.com"
@@ -11,10 +12,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/BLCA88/extension-terraform-sync"
-  },
-  "bugs": {
-    "url": ""
-  },
+  },  
   "homepage": "https://github.com/joseantunez/terraform-cloud-sync#readme",
   "version": "0.0.1",
   "type": "module",
@@ -25,14 +23,14 @@
     "Other"
   ],
   "activationEvents": [],
-  "main": "./src/extension.js",
+  "main": "src/extension.js",
   "contributes": {
     "viewsContainers": {
       "activitybar": [
         {
           "id": "tfcloudSidebar",
           "title": "%view.container.tfcloudSidebar%",
-          "icon": "media/tf.svg"
+          "icon": "media/tfcloud-sync-lateral.png"
         }
       ]
     },
@@ -52,7 +50,8 @@
         "icon": {
           "light": "media/connect-black.svg",
           "dark": "media/connect-white.svg"
-        }
+        },
+        "category": "Terraform Cloud"
       },
       {
         "command": "tfcloud.logout",
@@ -60,7 +59,8 @@
         "icon": {
           "light": "media/XMark.svg",
           "dark": "media/XMark-white.svg"
-        }
+        },
+        "category": "Terraform Cloud"
       },
       {
         "command": "tfcloud.uploadTfvars",
@@ -68,7 +68,8 @@
         "icon": {
           "light": "media/ArrowUp.svg",
           "dark": "media/ArrowUp-white.svg"
-        }
+        },
+        "category": "Terraform Cloud"
       },
       {
         "command": "tfcloud.downloadTfvars",
@@ -76,7 +77,8 @@
         "icon": {
           "light": "media/ArrowDownTray.svg",
           "dark": "media/ArrowDownTray-white.svg"
-        }
+        },
+        "category": "Terraform Cloud"
       },
       {
         "command": "tfcloud.refresh",
@@ -84,7 +86,8 @@
         "icon": {
           "light": "media/ArrowPath.svg",
           "dark": "media/ArrowPath-white.svg"
-        }
+        },
+        "category": "Terraform Cloud"
       }
     ],
     "menus": {

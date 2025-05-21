@@ -1,7 +1,6 @@
 
 .git/
 .vscode/
-node_modules/
 
 
 *.log
@@ -13,11 +12,6 @@ Thumbs.db
 
 .gitignore
 .vscodeignore
-
-
-README.md
-CHANGELOG.md
-LICENSE
 
 
 **/*.test.*

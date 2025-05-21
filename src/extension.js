@@ -140,6 +140,14 @@ export async function activate(context) {
     })
   );
 
+  context.subscriptions.push(
+    vscode.commands.registerCommand("tfcloud.debugCommands", async () => {
+      const cmds = await vscode.commands.getCommands(true);
+      const tfcloud = cmds.filter((c) => c.includes("tfcloud"));
+      vscode.window.showInformationMessage(`Comandos: ${tfcloud.join(", ")}`);
+    })
+  );
+
   await registerProvider(context);
 }
 
