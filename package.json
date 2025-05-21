@@ -1,7 +1,20 @@
 {
-  "name": "terraform-cloud-vars",
-  "displayName": "Terraform Cloud Vars",
-  "description": "",
+  "name": "terraform-cloud-sync",
+  "displayName": "Terraform Cloud Sync",
+  "description": "Sync variables and manage runs from Terraform Cloud workspaces — directly from VSCode.",
+  "author": {
+    "name": "Jose Antúnez",
+    "email": "jl.antunez88@gmail.com"
+  },
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "bugs": {
+    "url": ""
+  },
+  "homepage": "https://github.com/joseantunez/terraform-cloud-sync#readme",
   "version": "0.0.1",
   "type": "module",
   "engines": {

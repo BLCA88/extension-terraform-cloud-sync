@@ -1,65 +1,109 @@
-# tfcloud-itti README
+# Terraform Cloud Sync
 
-This is the README for your extension "tfcloud-itti". After writing up a brief description, we recommend including the following sections.
+![VSCode Extension](https://img.shields.io/badge/vscode-extension-blue?logo=visualstudiocode)
+![Version](https://img.shields.io/badge/version-0.0.1-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
 
-## Features
+> 🔁 Upload and download `.tfvars` files from Terraform Cloud workspaces directly inside Visual Studio Code.
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
-
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
+🌍 Available languages: [English](README.md) | [Español](README.es.md)
 
 ---
 
-## Working with Markdown
+## ✨ Features
 
-You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
+- 📤 Upload `.tfvars` files to a selected Terraform Cloud workspace
+- 📥 Download `.tfvars` files from any workspace
+- 🔐 Secure authentication using your Terraform Cloud API token
+- 🌐 Auto-discovery of organizations, projects, and workspaces
+- 🧾 View latest runs with status, message, and apply option
+- 🗂️ Tree view integration with custom icons
+- 🌍 Multilingual UI (auto-detects English or Spanish)
 
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets
+---
 
-## For more information
+## 🚀 Getting Started
 
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+### 1. Install the extension
 
-**Enjoy!**
+From a `.vsix` file:
+
+```bash
+code --install-extension terraform-cloud-sync-0.0.1.vsix
+```
+
+Or from the VSCode Marketplace (if published).
+
+---
+
+### 2. Authenticate
+
+- Open the Command Palette (Ctrl+Shift+P or Cmd+Shift+P)
+- Run: Terraform Cloud: Iniciar sesión
+- Provide your organization name and API token
+
+---
+
+### 3. Upload or download `.tfvars`
+
+- Right-click a workspace from the sidebar
+- Choose:
+  - `Upload archivo.tfvars`
+  - `Download archivo.tfvars`
+- Or run the commands from the Command Palette
+
+---
+
+## 📷 Screenshots
+
+> _Add screenshots here showing:_
+>
+> - Sidebar with workspaces
+> - Upload/download dialog
+> - Run details panel with apply button
+
+---
+
+## 🧠 Requirements
+
+- Terraform Cloud account
+- API token with access to your organization and workspaces
+
+---
+
+## ⚙️ Configuration
+
+No settings required for now. Future versions may support:
+
+- Auto-sync `.tfvars` on save
+- Default workspace selection
+
+---
+
+## 📦 Project Structure
+
+```
+media/              → SVG icons (light/dark)
+src/
+  panels/           → Webview renderers
+  services/         → API integration
+  tree/             → Sidebar logic
+  utils/            → Helpers (i18n, templating)
+templates/          → Handlebars HTML templates
+```
+
+---
+
+## 👨‍💻 Author
+
+**José Antúnez**  
+GitHub: [@joseantunez](https://github.com/joseantunez)
+
+---
+
+## 🛡️ License
+
+This project is proprietary and closed-source.  
+Unauthorized use, modification, or distribution is not permitted.
+
+All rights reserved © 2025.

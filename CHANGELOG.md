@@ -1,9 +1,19 @@
-# Change Log
+# Changelog
 
-All notable changes to the "tfcloud-itti" extension will be documented in this file.
+All notable changes to this project will be documented in this file.
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+This project follows [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+---
 
-- Initial release
+## [0.0.1] - 2025-05-19
+
+### ✨ Added
+
+- Initial release of **Terraform Cloud Sync**
+- Upload `.tfvars` file to a selected Terraform Cloud workspace
+- Download `.tfvars` file from a workspace
+- Run details panel with apply support
+- TreeView integration with icons
+- i18n support (English / Spanish auto-detection)
+- Local SVG icons for light/dark themes
