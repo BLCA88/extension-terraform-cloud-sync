@@ -21,9 +21,18 @@
 
 ## 🚀 Primeros pasos
 
+### 1. Instalar la extensión
+
+Desde un archivo `.vsix`:
+
+```bash
+code --install-extension terraform-cloud-sync-0.0.1.vsix
+
+```
+
 ---
 
-### 1. Autenticarse
+### 2. Autenticarse
 
 - Abrí la paleta de comandos (`Ctrl+Shift+P` o `Cmd+Shift+P`)
 - Ejecutá: `Terraform Cloud: Iniciar sesión`
@@ -31,7 +40,7 @@
 
 ---
 
-### 2. Subir o descargar archivos `.tfvars`
+### 3. Subir o descargar archivos `.tfvars`
 
 - Hacé clic derecho sobre un workspace en la barra lateral
 - Elegí una de las opciones:
@@ -88,10 +97,3 @@ templates/          → Plantillas HTML en Handlebars
 GitHub: [@joseantunez](https://github.com/blca88)
 
 ---
-
-## 🛡️ Licencia
-
-Este proyecto es propietario y de código cerrado.  
-No se permite su copia, modificación ni redistribución sin autorización expresa del autor.
-
-Todos los derechos reservados © 2025.

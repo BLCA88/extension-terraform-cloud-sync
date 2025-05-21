@@ -1,6 +1,6 @@
 {
   "view.container.tfcloudSidebar": "Terraform Cloud",
-  "view.tfcloudProjects": "Vars",
+  "view.tfcloudProjects": "Sync",
 
   "command.tfcloud.login": "Terraform Cloud: Connect",
   "command.tfcloud.logout": "Terraform Cloud: Disconnect",

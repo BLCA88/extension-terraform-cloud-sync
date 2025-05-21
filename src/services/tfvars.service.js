@@ -1,12 +1,5 @@
 import fs from "fs";
-import axios from "axios";
-
-const api = axios.create({
-  baseURL: "https://app.terraform.io/api/v2",
-  headers: {
-    "Content-Type": "application/vnd.api+json",
-  },
-});
+import { api } from "../config/axios.config.js";
 
 async function getExistingVariables(workspaceId, token) {
   const res = await api.get(`/workspaces/${workspaceId}/vars`, {

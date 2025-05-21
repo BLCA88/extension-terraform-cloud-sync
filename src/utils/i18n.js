@@ -1,3 +1,5 @@
+import * as vscode from "vscode";
+
 export const i18n = {
   en: {
     workspace: "Workspace",
@@ -29,6 +31,9 @@ export const i18n = {
     downloadError: (err) => `❌ Download error: ${err}`,
     loggedOut: "🔒 Logged out. Run 'Login' to reconnect.",
     refreshing: "🔄 Refreshing...",
+    noOrganizationsFound: "No organizations found.",
+    selectOrganization: "Select an organization",
+    organizationFetchError: "Error fetching organizations: ",
   },
   es: {
     workspace: "Espacio de trabajo",
@@ -60,5 +65,11 @@ export const i18n = {
     downloadError: (err) => `❌ Error al descargar: ${err}`,
     loggedOut: "🔒 Sesión cerrada. Ejecutá 'Iniciar sesión' para reconectar.",
     refreshing: "🔄 Actualizando...",
+    noOrganizationsFound: "No se encontraron organizaciones.",
+    selectOrganization: "Seleccioná una organización",
+    organizationFetchError: "Error al obtener organizaciones: ",
   },
 };
+
+export const translate =
+  i18n[vscode.env.language.startsWith("es") ? "es" : "en"];
