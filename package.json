@@ -2,6 +2,7 @@
   "name": "terraform-cloud-sync",
   "displayName": "Terraform Cloud Sync",
   "description": "Sync variables and manage runs from Terraform Cloud workspaces — directly from VSCode.",
+  "publisher": "jose-antunez",
   "author": {
     "name": "Jose Antúnez",
     "email": "jl.antunez88@gmail.com"
@@ -9,7 +10,7 @@
   "license": "UNLICENSED",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/BLCA88/extension-terraform-sync"
   },
   "bugs": {
     "url": ""
@@ -23,9 +24,7 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [
-    "*"
-  ],
+  "activationEvents": [],
   "main": "./src/extension.js",
   "contributes": {
     "viewsContainers": {

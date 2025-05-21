@@ -2,7 +2,6 @@
 
 ![Extensión VSCode](https://img.shields.io/badge/vscode-extensión-blue?logo=visualstudiocode)
 ![Versión](https://img.shields.io/badge/version-0.0.1-blue)
-![Licencia](https://img.shields.io/badge/license-MIT-green)
 
 > 🔁 Sube y descarga archivos `.tfvars` desde workspaces de Terraform Cloud directamente en Visual Studio Code.
 
