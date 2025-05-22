@@ -2,17 +2,21 @@ import * as vscode from "vscode";
 import { translate } from "./utils/i18n.js";
 import { establishConnection } from "./controllers/auth.controller.js";
 import { TfCloudTreeProvider } from "./tree/tree-provider.js";
-import { syncVars } from "./controllers/vars.controller.js";
-
+import { uploadTfvars, downloadTfvars } from "./controllers/vars.controller.js";
 import { showRunDetails } from "./panels/run-details-panel.js";
 
 let treeProvider;
+let currentToken = null;
+let currentOrganization = null;
 
 async function registerProvider(context) {
   const creds = await establishConnection(context.globalState);
   if (!creds) return;
 
-  treeProvider = new TfCloudTreeProvider(creds.token, creds.organization);
+  currentToken = creds.token;
+  currentOrganization = creds.organization;
+
+  treeProvider = new TfCloudTreeProvider(currentToken, currentOrganization);
 
   const treeView = vscode.window.createTreeView("tfcloudProjects", {
     treeDataProvider: treeProvider,
@@ -26,14 +30,12 @@ async function registerProvider(context) {
       showRunDetails(
         selected.workspaceId,
         selected.label,
-        creds.token,
-        creds.organization,
+        currentToken,
+        currentOrganization,
         context.extensionUri
       );
     }
   });
-
-  syncVars(context, creds.token);
 }
 
 export async function activate(context) {
@@ -67,10 +69,16 @@ export async function activate(context) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("tfcloud.debugCommands", async () => {
-      const cmds = await vscode.commands.getCommands(true);
-      const tfcloud = cmds.filter((c) => c.includes("tfcloud"));
-      vscode.window.showInformationMessage(`Comandos: ${tfcloud.join(", ")}`);
+    vscode.commands.registerCommand("tfcloud.uploadTfvars", (item) => {
+      if (currentToken) uploadTfvars(item, currentToken);
+      else vscode.window.showErrorMessage("⚠️ No token available.");
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand("tfcloud.downloadTfvars", (item) => {
+      if (currentToken) downloadTfvars(item, currentToken);
+      else vscode.window.showErrorMessage("⚠️ No token available.");
     })
   );
 

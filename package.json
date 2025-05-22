@@ -122,7 +122,14 @@
           "group": "navigation"
         }
       ]
-    }
+    },
+    "viewsWelcome": [
+      {
+        "view": "tfcloudProjects",
+        "contents": "Conectate a Terraform Cloud para empezar.\n[🔒 Iniciar sesión en Terraform Cloud](command:tfcloud.login)",
+        "when": "!tfcloud.loggedIn"
+      }
+    ]
   },
   "scripts": {
     "lint": "eslint .",
