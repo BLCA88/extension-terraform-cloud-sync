@@ -23,6 +23,10 @@ Handlebars.registerHelper("capitalize", function (text) {
   return text?.charAt(0).toUpperCase() + text?.slice(1);
 });
 
+Handlebars.registerHelper("slice", (str, start, end) => {
+  return str?.slice(start, end);
+});
+
 export function renderHandlebarsTemplate(templateName, context = {}) {
   const templatePath = path.join(__dirname, "..", "templates", templateName);
   const source = fs.readFileSync(templatePath, "utf8");

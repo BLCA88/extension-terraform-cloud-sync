@@ -126,7 +126,7 @@
     "viewsWelcome": [
       {
         "view": "tfcloudProjects",
-        "contents": "Conectate a Terraform Cloud para empezar.\n[🔒 Iniciar sesión en Terraform Cloud](command:tfcloud.login)",
+        "contents": "%button.tfcloudConnect%",
         "when": "!tfcloud.loggedIn"
       }
     ]

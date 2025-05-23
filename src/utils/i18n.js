@@ -1,4 +1,7 @@
 import * as vscode from "vscode";
+import os from "os";
+
+const username = os.userInfo().username;
 
 export const i18n = {
   en: {
@@ -29,11 +32,21 @@ export const i18n = {
     downloadLabel: "Save .tfvars file",
     downloadSuccess: (name) => `✅ File saved from ${name}`,
     downloadError: (err) => `❌ Download error: ${err}`,
-    loggedOut: "🔒 Logged out. Run 'Login' to reconnect.",
+    connectionEstablishment: `Welcome ${username} 👋`,
+    loggedOut: "🔒 Logged out. Run 'Connect' to reconnect.",
     refreshing: "🔄 Refreshing...",
     noOrganizationsFound: "No organizations found.",
     selectOrganization: "Select an organization",
     organizationFetchError: "Error fetching organizations: ",
+    cliTokenErrorFile: "⚠️ Terraform CLI credentials file not found.",
+    cliTokenErrorMissing:
+      "❌ No token found in Terraform CLI credentials file.",
+    cliTokenErrorRead: "❌ Failed to read the Terraform CLI credentials file.",
+    tokenOptionTitle: "Terraform Cloud Sync",
+    tokenOptionPlaceholder: "Choose a method to enter your token",
+    tokenOptionCLI: "Use the token",
+    tokenOptionManual: "Manually token",
+    tokenOptionWeb: "Open Terraform Cloud",
   },
   es: {
     workspace: "Espacio de trabajo",
@@ -63,11 +76,28 @@ export const i18n = {
     downloadLabel: "Guardar archivo .tfvars",
     downloadSuccess: (name) => `✅ Archivo guardado desde ${name}`,
     downloadError: (err) => `❌ Error al descargar: ${err}`,
-    loggedOut: "🔒 Sesión cerrada. Ejecutá 'Iniciar sesión' para reconectar.",
+    connectionEstablishment: `Bienvenido ${username} 👋`,
+    loggedOut: "🔒 Sesión cerrada. Ejecutá 'Conectarse' para reconectar.",
     refreshing: "🔄 Actualizando...",
     noOrganizationsFound: "No se encontraron organizaciones.",
     selectOrganization: "Seleccioná una organización",
     organizationFetchError: "Error al obtener organizaciones: ",
+    cliTokenErrorFile:
+      "⚠️ No se encontró el archivo de credenciales de Terraform CLI.",
+    cliTokenErrorMissing:
+      "❌ No se encontró ningún token en el archivo de credenciales.",
+    cliTokenErrorRead:
+      "❌ Error al leer el archivo de credenciales de Terraform CLI.",
+    tokenOptionTitle: "Terraform Cloud Sync",
+    tokenOptionPlaceholder: "Seleccioná un método para ingresar tu token",
+    tokenOptionCLI: "Token CLI",
+    tokenOptionCLIDescription:
+      "Usar token desde archivo de configuración de Terraform CLI",
+    tokenOptionManual: "Token Manual",
+    tokenOptionManualDescription: "Ingresar token manualmente",
+    tokenOptionWeb: "Nuevo token",
+    tokenOptionWebDescription:
+      "Genera un token nuevo desde la pagina HCP Terraform",
   },
 };
 

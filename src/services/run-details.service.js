@@ -54,3 +54,37 @@ export async function getPlanDetails(planId, token) {
 
   throw new Error(`Error al obtener el plan. Status: ${response.status}`);
 }
+
+export async function getGitInfoFromRun(runId, token) {
+  try {
+    const runUrl = `/runs/${runId}?include=configuration_version`;
+
+    const runRes = await api.get(runUrl, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const runData = runRes?.data?.data;
+    if (!runData) return null;
+
+    const configVersionId =
+      runData.relationships["configuration-version"]?.data?.id;
+
+    if (!configVersionId) return null;
+
+    const ingressRes = await api.get(
+      `/configuration-versions/${configVersionId}/ingress-attributes`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    const attributes = ingressRes?.data?.data?.attributes;
+
+    if (!attributes) return null;
+
+    return attributes;
+  } catch (err) {
+    console.error("Error al obtener gitInfo:", err);
+    return null;
+  }
+}

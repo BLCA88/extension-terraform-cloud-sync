@@ -7,6 +7,7 @@
   "command.tfcloud.uploadTfvars": "Terraform Cloud: Upload .tfvars file",
   "command.tfcloud.downloadTfvars": "Terraform Cloud: Download .tfvars file",
   "command.tfcloud.refresh": "Terraform Cloud: Refresh",
+  "button.tfcloudConnect": "Connect to Terraform Cloud to get started.\n\n[Connect Terraform Cloud 🔒](command:tfcloud.login)",
 
   "menu.uploadTfvars": "Upload .tfvars file",
   "menu.downloadTfvars": "Download .tfvars file"

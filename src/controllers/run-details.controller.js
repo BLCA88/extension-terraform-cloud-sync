@@ -3,6 +3,7 @@ import {
   getRunsForWorkspace,
   applyRun,
   getPlanDetails,
+  getGitInfoFromRun,
 } from "../services/run-details.service.js";
 import { renderHandlebarsTemplate } from "../utils/renderHandlebarsTemplate.js";
 import { translate } from "../utils/i18n.js";
@@ -42,6 +43,7 @@ export class RunDetailsPanel {
       if (run.attributes.status === "pending" && runs[1]) run = runs[1];
 
       const runId = run.id;
+
       const status = run.attributes.status;
       const msg = run.attributes.message || "Sin mensaje";
 
@@ -56,6 +58,15 @@ export class RunDetailsPanel {
 
       const terraformVersion = run.attributes["terraform-version"];
       const canApply = status === "planned";
+
+      let gitInfo;
+      try {
+        gitInfo = await getGitInfoFromRun(run.id, this.token);
+      } catch (err) {
+        vscode.window.showWarningMessage(
+          "⚠️ No se pudieron obtener datos del commit: " + err.message
+        );
+      }
 
       const planId = run.relationships?.plan?.data?.id;
 
@@ -110,6 +121,7 @@ export class RunDetailsPanel {
         translate,
         summaryText,
         ...changesSummary,
+        gitInfo,
       });
     } catch (err) {
       this.panel.webview.html = `<html><body class="p-4 bg-black text-red-500">Error al cargar run: ${err}</body></html>`;

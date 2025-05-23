@@ -11,10 +11,19 @@ let currentOrganization = null;
 
 async function registerProvider(context) {
   const creds = await establishConnection(context.globalState);
-  if (!creds) return;
+  if (!creds) {
+    await vscode.commands.executeCommand(
+      "setContext",
+      "tfcloud.loggedIn",
+      false
+    );
+    return;
+  }
 
   currentToken = creds.token;
   currentOrganization = creds.organization;
+
+  await vscode.commands.executeCommand("setContext", "tfcloud.loggedIn", true);
 
   treeProvider = new TfCloudTreeProvider(currentToken, currentOrganization);
 
@@ -39,6 +48,13 @@ async function registerProvider(context) {
 }
 
 export async function activate(context) {
+  // const token = context.globalState.get("tfcloud.token");
+  // await vscode.commands.executeCommand(
+  //   "setContext",
+  //   "tfcloud.loggedIn",
+  //   !!token
+  // );
+
   context.subscriptions.push(
     vscode.commands.registerCommand("tfcloud.login", async () => {
       await registerProvider(context);
@@ -49,6 +65,11 @@ export async function activate(context) {
     vscode.commands.registerCommand("tfcloud.logout", async () => {
       await context.globalState.update("tfcloud.token", undefined);
       await context.globalState.update("tfcloud.org", undefined);
+      await vscode.commands.executeCommand(
+        "setContext",
+        "tfcloud.loggedIn",
+        false
+      );
 
       if (treeProvider) {
         treeProvider.updateAuth(null, null);

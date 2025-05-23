@@ -3,27 +3,68 @@
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="bg-gray-900 text-white p-6">
-    <h2 class="text-xl font-bold">{{translate.workspace}}:
-      <span class="text-green-400">{{workspaceName}}</span>
-    </h2>
+    <div class="grid grid-cols-2 gap-4">
+      <!-- Info general -->
+      <div>
+        <h2 class="text-xl font-bold">
+          {{translate.workspace}}:
+          <span class="text-green-400">{{workspaceName}}</span>
+        </h2>
 
-    <p class="text-gray-400 mb-4 font-mono">{{translate.id}}:
-      {{workspaceId}}</p>
+        <p class="text-gray-400 mb-4 font-mono">{{translate.id}}:
+          {{workspaceId}}</p>
 
-    <ul class="mb-4">
-      <li><b>{{translate.status}}:</b>
-        <span class="text-indigo-400">{{capitalize status}}</span></li>
-      <li><b>{{translate.updated}}:</b> {{updatedAt}}</li>
-      <li><b>{{translate.version}}:</b> {{terraformVersion}}</li>
-      <li><b>{{translate.message}}:</b> {{msg}}</li>
-      <li><b>RunID:</b>
-        <a
-          href="https://app.terraform.io/app/{{organization}}/workspaces/{{workspaceName}}/runs/{{runId}}"
-          target="_blank"
-          class="font-mono text-indigo-300 hover:border hover:border-indigo-300 hover:p-1 hover:rounded"
-        >{{runId}}</a>
-      </li>
-    </ul>
+        <ul class="mb-4">
+          <li><b>{{translate.status}}:</b>
+            <span class="text-indigo-400">{{capitalize status}}</span></li>
+          <li><b>{{translate.updated}}:</b> {{updatedAt}}</li>
+          <li><b>{{translate.version}}:</b> {{terraformVersion}}</li>
+          <li><b>{{translate.message}}:</b> {{msg}}</li>
+          <li><b>RunID:</b>
+            <a
+              href="https://app.terraform.io/app/{{organization}}/workspaces/{{workspaceName}}/runs/{{runId}}"
+              target="_blank"
+              class="font-mono text-indigo-300 hover:border hover:border-indigo-300 hover:p-1 hover:rounded"
+            >{{runId}}</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- GitHub Info -->
+      <div class="p-4 bg-gray-800 rounded-lg border border-gray-700">
+        <h3 class="text-sm text-gray-300 font-bold mb-2">GitHub</h3>
+        {{#if gitInfo}}
+          <ul class="text-sm text-gray-400">
+            <li><b>Rama:</b> {{gitInfo.branch}}</li>
+            <li><b>Commit:</b>
+              <a
+                href="{{gitInfo.commit-url}}"
+                class="text-indigo-400 hover:underline"
+              >
+                {{slice gitInfo.commit-sha 0 7}}
+                -
+                {{gitInfo.commit-message}}
+              </a>
+            </li>
+            <li><b>Autor:</b>
+              <a
+                href="{{gitInfo.sender-html-url}}"
+                target="_blank"
+                class="text-indigo-400 hover:underline flex items-center gap-2"
+              >
+                <img
+                  src="{{gitInfo.sender-avatar-url}}"
+                  class="w-6 h-6 rounded-full"
+                />
+                {{gitInfo.sender-username}}
+              </a>
+            </li>
+          </ul>
+        {{else}}
+          <p class="text-gray-500">No hay datos de GitHub disponibles.</p>
+        {{/if}}
+      </div>
+    </div>
 
     {{#if canApply}}
       <button
