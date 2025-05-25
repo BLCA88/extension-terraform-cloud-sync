@@ -5,14 +5,16 @@ export async function showRunDetails(
   workspaceName,
   token,
   organization,
-  extensionUri
+  extensionUri,
+  runId
 ) {
   const panel = new RunDetailsPanel(
     workspaceId,
     workspaceName,
     token,
     organization,
-    extensionUri
+    extensionUri,
+    runId
   );
   await panel.show();
 }

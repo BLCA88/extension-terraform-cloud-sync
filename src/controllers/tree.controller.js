@@ -10,21 +10,6 @@ export async function resolveTreeItems(element, token, organization) {
   const isValid =
     token && organization && (await validateAuth(organization, token));
 
-  // if (!isValid) {
-  //   const loginItem = new TfItem(
-  //     "Iniciar sesión",
-  //     "login",
-  //     vscode.TreeItemCollapsibleState.None
-  //   );
-  //   loginItem.command = {
-  //     command: "tfcloud.login",
-  //     title: "Iniciar sesión en Terraform Cloud",
-  //     tooltip: "Hacé clic para iniciar sesión en Terraform Cloud",
-  //   };
-
-  //   loginItem.iconPath = new vscode.ThemeIcon("sign-in");
-  //   return [loginItem];
-  // }
   if (!isValid) {
     return [];
   }

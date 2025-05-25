@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { getOrganizations, validateAuth } from "../services/auth.service.js";
-import { translate } from "../utils/i18n.js";
 import { getTokenFromOptions } from "../utils/tokenOptions.js";
+import { translate } from "../utils/i18n.js";
 
 export async function establishConnection(globalState) {
   const existingToken = globalState.get("tfcloud.token");

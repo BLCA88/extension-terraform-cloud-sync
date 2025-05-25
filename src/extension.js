@@ -1,63 +1,33 @@
 import * as vscode from "vscode";
 import { translate } from "./utils/i18n.js";
-import { establishConnection } from "./controllers/auth.controller.js";
-import { TfCloudTreeProvider } from "./tree/tree-provider.js";
+import { TfCloudSession } from "./controllers/session-provider.controller.js";
+import { createTreeViews } from "./tree/tree.context.js";
 import { uploadTfvars, downloadTfvars } from "./controllers/vars.controller.js";
-import { showRunDetails } from "./panels/run-details-panel.js";
 
-let treeProvider;
-let currentToken = null;
-let currentOrganization = null;
-
-async function registerProvider(context) {
-  const creds = await establishConnection(context.globalState);
-  if (!creds) {
-    await vscode.commands.executeCommand(
-      "setContext",
-      "tfcloud.loggedIn",
-      false
-    );
-    return;
-  }
-
-  currentToken = creds.token;
-  currentOrganization = creds.organization;
-
-  await vscode.commands.executeCommand("setContext", "tfcloud.loggedIn", true);
-
-  treeProvider = new TfCloudTreeProvider(currentToken, currentOrganization);
-
-  const treeView = vscode.window.createTreeView("tfcloudProjects", {
-    treeDataProvider: treeProvider,
-  });
-
-  context.subscriptions.push(treeView);
-
-  treeView.onDidChangeSelection((e) => {
-    const selected = e.selection[0];
-    if (selected?.contextValue === "workspace") {
-      showRunDetails(
-        selected.workspaceId,
-        selected.label,
-        currentToken,
-        currentOrganization,
-        context.extensionUri
-      );
-    }
-  });
-}
+let tfTreeView = null;
+let tfRunsView = null;
+let tfTreeProvider = null;
 
 export async function activate(context) {
-  // const token = context.globalState.get("tfcloud.token");
-  // await vscode.commands.executeCommand(
-  //   "setContext",
-  //   "tfcloud.loggedIn",
-  //   !!token
-  // );
+  const session = await TfCloudSession.getInstance(context.globalState);
+  if (session) {
+    const views = await createTreeViews(context, session);
+    tfTreeView = views.treeView;
+    tfRunsView = views.runsView;
+    tfTreeProvider = views.treeProvider;
+  }
 
   context.subscriptions.push(
     vscode.commands.registerCommand("tfcloud.login", async () => {
-      await registerProvider(context);
+      const session = await TfCloudSession.getInstance(context.globalState);
+      if (!session) {
+        vscode.window.showErrorMessage("❌ No se pudo iniciar sesión.");
+        return;
+      }
+
+      const views = await createTreeViews(context, session);
+      tfTreeView = views.treeView;
+      tfRunsView = views.runsView;
     })
   );
 
@@ -65,45 +35,48 @@ export async function activate(context) {
     vscode.commands.registerCommand("tfcloud.logout", async () => {
       await context.globalState.update("tfcloud.token", undefined);
       await context.globalState.update("tfcloud.org", undefined);
+      TfCloudSession.reset();
+
+      if (tfTreeView) tfTreeView.dispose();
+      if (tfRunsView) tfRunsView.dispose();
+      tfTreeView = null;
+      tfRunsView = null;
+
       await vscode.commands.executeCommand(
         "setContext",
         "tfcloud.loggedIn",
         false
       );
-
-      if (treeProvider) {
-        treeProvider.updateAuth(null, null);
-        treeProvider.refresh();
-      }
-
       vscode.window.showInformationMessage(translate.loggedOut);
     })
   );
 
   context.subscriptions.push(
     vscode.commands.registerCommand("tfcloud.refresh", async () => {
-      if (treeProvider) {
+      if (tfTreeProvider) {
         vscode.window.showInformationMessage(translate.refreshing);
-        treeProvider.refresh();
+        tfTreeProvider.refresh();
+      } else {
+        vscode.window.showWarningMessage("⚠️ No hay vista para refrescar.");
       }
     })
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("tfcloud.uploadTfvars", (item) => {
-      if (currentToken) uploadTfvars(item, currentToken);
-      else vscode.window.showErrorMessage("⚠️ No token available.");
+    vscode.commands.registerCommand("tfcloud.uploadTfvars", async (item) => {
+      const session = await TfCloudSession.getInstance(context.globalState);
+      if (session?.getToken()) uploadTfvars(item, session.getToken());
+      else vscode.window.showErrorMessage("⚠️ No token disponible.");
     })
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("tfcloud.downloadTfvars", (item) => {
-      if (currentToken) downloadTfvars(item, currentToken);
-      else vscode.window.showErrorMessage("⚠️ No token available.");
+    vscode.commands.registerCommand("tfcloud.downloadTfvars", async (item) => {
+      const session = await TfCloudSession.getInstance(context.globalState);
+      if (session?.getToken()) downloadTfvars(item, session.getToken());
+      else vscode.window.showErrorMessage("⚠️ No token disponible.");
     })
   );
-
-  await registerProvider(context);
 }
 
 export function deactivate() {}

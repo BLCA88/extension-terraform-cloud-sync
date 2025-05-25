@@ -9,13 +9,26 @@ import { renderHandlebarsTemplate } from "../utils/renderHandlebarsTemplate.js";
 import { translate } from "../utils/i18n.js";
 import { getProviderImage } from "../utils/providersImages.js";
 
+function findBlockingRun(runs) {
+  const blockingStates = ["planning", "planned", "confirmed"];
+  return runs.find((r) => blockingStates.includes(r.attributes.status));
+}
+
 export class RunDetailsPanel {
-  constructor(workspaceId, workspaceName, token, organization, extensionUri) {
+  constructor(
+    workspaceId,
+    workspaceName,
+    token,
+    organization,
+    extensionUri,
+    runId
+  ) {
     this.workspaceId = workspaceId;
     this.workspaceName = workspaceName;
     this.token = token;
     this.organization = organization;
     this.extensionUri = extensionUri;
+    this.runId = runId;
 
     this.panel = vscode.window.createWebviewPanel(
       "runDetailView",
@@ -35,26 +48,25 @@ export class RunDetailsPanel {
     try {
       const runs = await getRunsForWorkspace(this.workspaceId, this.token);
       if (!runs?.length) {
-        this.panel.webview.html = `<html><body class="bg-black text-red-500 p-4">No hay runs disponibles.</body></html>`;
+        this.panel.webview.html = `<html><body class="bg-black text-red-500 p-4">${translate.noInformation}.</body></html>`;
         return;
       }
-
-      let run = runs[0];
-      if (run.attributes.status === "pending" && runs[1]) run = runs[1];
+      const run = runs.find((r) => r.id === this.runId);
 
       const runId = run.id;
 
       const status = run.attributes.status;
-      const msg = run.attributes.message || "Sin mensaje";
+      const isPending = status === "pending";
+      const blockingRun = isPending ? findBlockingRun(runs) : null;
+      const blockingRunId = blockingRun?.id ?? null;
 
-      const updatedAt = new Date(run.attributes["updated-at"]).toLocaleString(
-        "es-AR",
-        {
-          dateStyle: "medium",
-          timeStyle: "short",
-          hour12: false,
-        }
-      );
+      const msg = run.attributes.message || ``;
+
+      const updatedAt = new Date(run.attributes["updated-at"]).toLocaleString({
+        dateStyle: "medium",
+        timeStyle: "short",
+        hour12: false,
+      });
 
       const terraformVersion = run.attributes["terraform-version"];
       const canApply = status === "planned";
@@ -64,7 +76,7 @@ export class RunDetailsPanel {
         gitInfo = await getGitInfoFromRun(run.id, this.token);
       } catch (err) {
         vscode.window.showWarningMessage(
-          "⚠️ No se pudieron obtener datos del commit: " + err.message
+          translate.commitFetchError + err.message
         );
       }
 
@@ -96,7 +108,7 @@ export class RunDetailsPanel {
             });
           }
         } catch (err) {
-          vscode.window.showErrorMessage("❌ Error al obtener el plan: " + err);
+          vscode.window.showErrorMessage(translate.planFetchError + err);
         }
       }
 
@@ -122,9 +134,10 @@ export class RunDetailsPanel {
         summaryText,
         ...changesSummary,
         gitInfo,
+        blockingRunId,
       });
     } catch (err) {
-      this.panel.webview.html = `<html><body class="p-4 bg-black text-red-500">Error al cargar run: ${err}</body></html>`;
+      this.panel.webview.html = `<html><body class="p-4 bg-black text-red-500">${err}</body></html>`;
     }
   }
 
@@ -132,10 +145,10 @@ export class RunDetailsPanel {
     if (msg.type === "apply") {
       try {
         await applyRun(msg.runId, this.token);
-        vscode.window.showInformationMessage("✅ Apply confirmado.");
+        vscode.window.showInformationMessage(translate.applySuccess);
         this.render();
       } catch (err) {
-        vscode.window.showErrorMessage("❌ Error al aplicar: " + err);
+        vscode.window.showErrorMessage(translate.applyError(err));
       }
     }
   }

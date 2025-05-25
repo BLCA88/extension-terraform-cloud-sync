@@ -14,7 +14,7 @@
     "url": "https://github.com/BLCA88/extension-terraform-sync"
   },
   "homepage": "https://github.com/joseantunez/terraform-cloud-sync#readme",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "type": "module",
   "engines": {
     "vscode": "^1.90.0"
@@ -40,6 +40,12 @@
           "id": "tfcloudProjects",
           "name": "%view.tfcloudProjects%",
           "icon": "media/tf.svg"
+        },
+        {
+          "id": "runsTree",
+          "name": "RUNS",
+          "icon": "$(run)",
+          "when": "tfcloud.loggedIn"
         }
       ]
     },
@@ -47,46 +53,37 @@
       {
         "command": "tfcloud.login",
         "title": "%command.tfcloud.login%",
-        "icon": {
-          "light": "media/connect-black.svg",
-          "dark": "media/connect-white.svg"
-        },
+        "icon": "$(log-in)",
         "category": "Terraform Cloud"
       },
       {
         "command": "tfcloud.logout",
         "title": "%command.tfcloud.logout%",
-        "icon": {
-          "light": "media/XMark.svg",
-          "dark": "media/XMark-white.svg"
-        },
+        "icon": "$(debug-disconnect)",
         "category": "Terraform Cloud"
       },
       {
         "command": "tfcloud.uploadTfvars",
         "title": "%command.tfcloud.uploadTfvars%",
-        "icon": {
-          "light": "media/ArrowUp.svg",
-          "dark": "media/ArrowUp-white.svg"
-        },
+        "icon": "$(cloud-upload)",
         "category": "Terraform Cloud"
       },
       {
         "command": "tfcloud.downloadTfvars",
         "title": "%command.tfcloud.downloadTfvars%",
-        "icon": {
-          "light": "media/ArrowDownTray.svg",
-          "dark": "media/ArrowDownTray-white.svg"
-        },
+        "icon": "$(cloud-download)",
         "category": "Terraform Cloud"
       },
       {
         "command": "tfcloud.refresh",
         "title": "%command.tfcloud.refresh%",
-        "icon": {
-          "light": "media/ArrowPath.svg",
-          "dark": "media/ArrowPath-white.svg"
-        },
+        "icon": "$(refresh)",
+        "category": "Terraform Cloud"
+      },
+      {
+        "command": "tfcloud.refreshRuns",
+        "title": "Refrescar RUNS",
+        "icon": "$(refresh)",
         "category": "Terraform Cloud"
       }
     ],
@@ -108,17 +105,22 @@
       "view/title": [
         {
           "command": "tfcloud.login",
-          "when": "view == tfcloudProjects",
+          "when": "view == tfcloudProjects && !tfcloud.loggedIn",
           "group": "navigation"
         },
         {
           "command": "tfcloud.refresh",
-          "when": "view == tfcloudProjects",
+          "when": "view == tfcloudProjects && tfcloud.loggedIn",
           "group": "navigation"
         },
         {
           "command": "tfcloud.logout",
-          "when": "view == tfcloudProjects",
+          "when": "view == tfcloudProjects && tfcloud.loggedIn",
+          "group": "navigation"
+        },
+        {
+          "command": "tfcloud.refreshRuns",
+          "when": "view == runsTree && tfcloud.loggedIn",
           "group": "navigation"
         }
       ]
@@ -134,7 +136,8 @@
   "scripts": {
     "lint": "eslint .",
     "pretest": "npm run lint",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "release": "standard-version"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
@@ -142,7 +145,8 @@
     "@types/vscode": "^1.90.0",
     "@vscode/test-cli": "^0.0.10",
     "@vscode/test-electron": "^2.5.2",
-    "eslint": "^9.25.1"
+    "eslint": "^9.25.1",
+    "standard-version": "^9.5.0"
   },
   "dependencies": {
     "axios": "^1.9.0",

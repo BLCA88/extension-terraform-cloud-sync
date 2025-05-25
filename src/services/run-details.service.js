@@ -1,88 +1,75 @@
-// src/services/run.service.js
-import axios from "axios";
-import { api } from "../config/axios.config.js";
+import { callTFCApi } from "../api/tfc.api.js";
 
 export async function getRunsForWorkspace(workspaceId, token) {
-  const url = `/workspaces/${workspaceId}/runs?page[size]=5`;
-  const res = await api.get(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return res.data.data;
+  try {
+    const res = await callTFCApi({
+      url: `/workspaces/${workspaceId}/runs`,
+      token,
+    });
+    return res.data.data;
+  } catch {
+    return false;
+  }
+}
+
+export async function getRuns(RunId, token) {
+  try {
+    const res = await callTFCApi({
+      url: `/runs/${RunId}`,
+      token,
+    });
+    return res.data.data;
+  } catch {
+    return false;
+  }
 }
 
 export async function applyRun(runId, token) {
   const url = `/runs/${runId}/actions/apply`;
-  const res = await api.post(
+
+  const response = await callTFCApi({
+    method: "post",
     url,
-    {},
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      validateStatus: (status) => status === 202,
-    }
-  );
-  return res.status === 202;
+    token,
+    data: {},
+  });
+
+  return response.status === 202;
 }
 
 export async function getPlanDetails(planId, token) {
-  const url = `/plans/${planId}/json-output`;
-
-  const response = await api.get(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    maxRedirects: 0,
-    validateStatus: (status) => status >= 200 && status < 400,
+  const res = await callTFCApi({
+    url: `/plans/${planId}/json-output`,
+    token,
   });
+  if (res.status === 204) return res;
 
-  if (response.status === 200) {
-    return response.data;
-  }
-
-  if (response.status === 307) {
-    const redirectUrl = response.headers.location;
-    const archivistRes = await axios.get(redirectUrl, {
-      headers: {
-        "Content-Type": "application/vnd.api+json",
-      },
-    });
-    return archivistRes.data;
-  }
-
-  throw new Error(`Error al obtener el plan. Status: ${response.status}`);
+  return res.data;
 }
 
 export async function getGitInfoFromRun(runId, token) {
   try {
-    const runUrl = `/runs/${runId}?include=configuration_version`;
-
-    const runRes = await api.get(runUrl, {
-      headers: { Authorization: `Bearer ${token}` },
+    const runRes = await callTFCApi({
+      method: "get",
+      url: `/runs/${runId}?include=configuration_version`,
+      token,
     });
 
     const runData = runRes?.data?.data;
     if (!runData) return null;
 
     const configVersionId =
-      runData.relationships["configuration-version"]?.data?.id;
-
+      runData.relationships?.["configuration-version"]?.data?.id;
     if (!configVersionId) return null;
 
-    const ingressRes = await api.get(
-      `/configuration-versions/${configVersionId}/ingress-attributes`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+    const ingressRes = await callTFCApi({
+      method: "get",
+      url: `/configuration-versions/${configVersionId}/ingress-attributes`,
+      token,
+    });
 
     const attributes = ingressRes?.data?.data?.attributes;
-
-    if (!attributes) return null;
-
-    return attributes;
+    return attributes ?? null;
   } catch (err) {
     console.error("Error al obtener gitInfo:", err);
     return null;

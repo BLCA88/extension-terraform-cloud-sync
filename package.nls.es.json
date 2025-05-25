@@ -1,12 +1,12 @@
 {
   "view.container.tfcloudSidebar": "Terraform Cloud",
-  "view.tfcloudProjects": "Sync",
+  "view.tfcloudProjects": "Projects/Workspace",
 
-  "command.tfcloud.login": "Terraform Cloud: Conectar",
-  "command.tfcloud.logout": "Terraform Cloud: Desconectar",
-  "command.tfcloud.uploadTfvars": "Terraform Cloud: Subir archivo .tfvars",
-  "command.tfcloud.downloadTfvars": "Terraform Cloud: Descargar archivo .tfvars",
-  "command.tfcloud.refresh": "Terraform Cloud: Actualizar",
+  "command.tfcloud.login": "Conectar",
+  "command.tfcloud.logout": "Desconectar",
+  "command.tfcloud.uploadTfvars": "Subir archivo .tfvars",
+  "command.tfcloud.downloadTfvars": "Descargar archivo .tfvars",
+  "command.tfcloud.refresh": "Actualizar",
   "button.tfcloudConnect": "Conectate a Terraform Cloud para empezar.\n\n[Conectarse a Terraform Cloud 🔒](command:tfcloud.login)",
 
   "menu.uploadTfvars": "Subir archivo .tfvars",

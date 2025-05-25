@@ -1,16 +1,15 @@
-import { api } from "../config/axios.config.js";
+import { callTFCApi } from "../api/tfc.api.js";
 
 export async function makeRequestPaginated(path, token) {
   let allData = [];
   let nextUrl = path.startsWith("http")
     ? path
-    : `${api.defaults.baseURL}${path}`;
+    : `https://app.terraform.io/api/v2${path}`;
 
   while (nextUrl) {
-    const res = await api.get(nextUrl, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    const res = await callTFCApi({
+      fullUrl: nextUrl,
+      token,
     });
 
     const { data, links } = res.data;

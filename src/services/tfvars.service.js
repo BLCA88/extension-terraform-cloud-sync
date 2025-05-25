@@ -1,11 +1,13 @@
 import fs from "fs";
-import { api } from "../config/axios.config.js";
+import { callTFCApi } from "../api/tfc.api.js";
 
 async function getExistingVariables(workspaceId, token) {
-  const res = await api.get(`/workspaces/${workspaceId}/vars`, {
-    headers: { Authorization: `Bearer ${token}` },
+  const data = await callTFCApi({
+    url: `/workspaces/${workspaceId}/vars`,
+    token,
   });
-  return res.data.data;
+
+  return data.data;
 }
 
 export async function uploadTfvarsToWorkspace(workspaceId, filePath, token) {
@@ -44,14 +46,14 @@ export async function uploadTfvarsToWorkspace(workspaceId, filePath, token) {
       },
     };
 
-    const res = await api({
+    const res = await callTFCApi({
       method,
       url,
+      token,
       data: payload,
-      headers: { Authorization: `Bearer ${token}` },
     });
 
-    return res.data;
+    return res;
   });
 
   return Promise.all(createOrUpdate);
@@ -63,6 +65,7 @@ export async function downloadTfvarsFromWorkspace(
   token
 ) {
   const variables = await getExistingVariables(workspaceId, token);
+
   const terraformVars = variables.filter(
     (v) => v.attributes.category === "terraform"
   );

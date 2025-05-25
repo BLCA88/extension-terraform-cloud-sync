@@ -1,11 +1,22 @@
 <html>
   <head>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      integrity="sha512-..."
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://microsoft.github.io/vscode-codicons/dist/codicon.css"
+    />
   </head>
   <body class="bg-gray-900 text-white p-6">
     <div class="grid grid-cols-2 gap-4">
       <!-- Info general -->
-      <div>
+      <div class="">
         <h2 class="text-xl font-bold">
           {{translate.workspace}}:
           <span class="text-green-400">{{workspaceName}}</span>
@@ -15,8 +26,13 @@
           {{workspaceId}}</p>
 
         <ul class="mb-4">
-          <li><b>{{translate.status}}:</b>
-            <span class="text-indigo-400">{{capitalize status}}</span></li>
+          <li>
+            <b>{{translate.status}}:</b>
+            <span class="{{statusColor status}}">
+              {{capitalize status}}
+              <i class="codicon {{statusCodicon status}}"></i>
+            </span>
+          </li>
           <li><b>{{translate.updated}}:</b> {{updatedAt}}</li>
           <li><b>{{translate.version}}:</b> {{terraformVersion}}</li>
           <li><b>{{translate.message}}:</b> {{msg}}</li>
@@ -30,23 +46,53 @@
         </ul>
       </div>
 
-      <!-- GitHub Info -->
-      <div class="p-4 bg-gray-800 rounded-lg border border-gray-700">
-        <h3 class="text-sm text-gray-300 font-bold mb-2">GitHub</h3>
+      <!-- Info secondary -->
+      <div class="pt-4 pl-1 bg-gray-800 rounded-lg border border-gray-700">
         {{#if gitInfo}}
-          <ul class="text-sm text-gray-400">
-            <li><b>Rama:</b> {{gitInfo.branch}}</li>
-            <li><b>Commit:</b>
-              <a
-                href="{{gitInfo.commit-url}}"
-                class="text-indigo-400 hover:underline"
-              >
-                {{slice gitInfo.commit-sha 0 7}}
-                -
-                {{gitInfo.commit-message}}
-              </a>
-            </li>
-            <li><b>Autor:</b>
+          <h3 class="text-lg text-gray-300 font-bold mb-4 ml-2">GitHub
+            <span><i class="fa-brands fa-github"></i></span></h3>
+          <div class="flex flex-row w-full justify-start">
+            <div class="w-3/5">
+              <table class="table-fixed text-sm text-gray-300 w-full">
+                <tbody>
+                  <tr>
+                    <td
+                      class="w-16 font-bold pr-2 align-top text-right"
+                    >Config</td>
+                    <td>From GitHub by {{gitInfo.sender-username}}</td>
+                  </tr>
+                  <tr>
+                    <td class="font-bold pr-2 align-top text-right">Branch</td>
+                    <td>{{gitInfo.branch}}</td>
+                  </tr>
+                  <tr>
+                    <td class="font-bold pr-2 align-top text-right">Commit</td>
+                    <td>
+                      <a
+                        href="{{gitInfo.commit-url}}"
+                        class="text-indigo-400 hover:underline"
+                      >
+                        {{slice gitInfo.commit-sha 0 7}}
+                      </a>
+                      -
+                      {{gitInfo.commit-message}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="font-bold pr-2 align-top text-right">Repo</td>
+                    <td>
+                      <a
+                        href="{{gitInfo.clone-url}}"
+                        class="text-indigo-400 hover:underline"
+                      >
+                        {{gitInfo.identifier}}
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="w-2/5 flex justify-center h-full items-center">
               <a
                 href="{{gitInfo.sender-html-url}}"
                 target="_blank"
@@ -54,12 +100,11 @@
               >
                 <img
                   src="{{gitInfo.sender-avatar-url}}"
-                  class="w-6 h-6 rounded-full"
+                  class="w-20 h-20 rounded-full"
                 />
-                {{gitInfo.sender-username}}
               </a>
-            </li>
-          </ul>
+            </div>
+          </div>
         {{else}}
           <p class="text-gray-500">No hay datos de GitHub disponibles.</p>
         {{/if}}
@@ -118,7 +163,15 @@
         </tbody>
       </table>
     {{else}}
-      <p class="text-gray-400 mt-2">{{translate.noChanges}}</p>
+      {{#if blockingRunId}}
+        <p class="text-yellow-400 mt-2">{{translate.pendingRun}}
+          <code
+            class="text-white font-mono font-bold"
+          >{{blockingRunId}}</code></p>
+
+      {{else}}
+        <p class="text-gray-400 mt-2">{{translate.noChanges}}</p>
+      {{/if}}
     {{/if}}
 
     <script>

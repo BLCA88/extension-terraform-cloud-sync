@@ -8,6 +8,7 @@ export const i18n = {
     workspace: "Workspace",
     id: "ID",
     status: "Status",
+    noInformation: "No information available.",
     updated: "Updated at",
     version: "Terraform version",
     message: "Message",
@@ -47,11 +48,17 @@ export const i18n = {
     tokenOptionCLI: "Use the token",
     tokenOptionManual: "Manually token",
     tokenOptionWeb: "Open Terraform Cloud",
+    pendingRun: `⚠️ The workspace is waiting for the next execution to continue: `,
+    commitFetchError: "❌ Commit information not available: ",
+    planFetchError: "❌ Plan information not available: ",
+    applySuccess: "✅ Apply success.",
+    applyError: (err) => `❌ Apply error: ${err}`,
   },
   es: {
     workspace: "Espacio de trabajo",
     id: "ID",
     status: "Estado",
+    noInformation: "No hay información disponible.",
     updated: "Actualizado",
     version: "Versión de Terraform",
     message: "Mensaje",
@@ -98,6 +105,11 @@ export const i18n = {
     tokenOptionWeb: "Nuevo token",
     tokenOptionWebDescription:
       "Genera un token nuevo desde la pagina HCP Terraform",
+    pendingRun: `⚠️ El espacio de trabajo está esperando la siguiente ejecución para continuar: `,
+    commitFetchError: "❌ No se pudo obtener los datos del commit: ",
+    planFetchError: "❌ Error al obtener el plan: ",
+    applySuccess: "✅ Apply confirmado.",
+    applyError: (err) => `❌ Error al aplicar: ${err}`,
   },
 };
 
