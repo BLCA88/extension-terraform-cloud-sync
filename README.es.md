@@ -1,7 +1,7 @@
 # Terraform Cloud Sync
 
 ![Extensión VSCode](https://img.shields.io/badge/vscode-extensión-blue?logo=visualstudiocode)
-![Versión](https://img.shields.io/badge/version-1.0.0-blue)
+![Versión](https://img.shields.io/badge/version-0.1.0-blue)
 
 > Sincronice `.tfvars` y verifique ejecuciones desde espacios de trabajo de Terraform Cloud, directamente desde VSCode..
 
@@ -26,7 +26,7 @@
 Desde un archivo `.vsix`:
 
 ```bash
-code --install-extension terraform-cloud-sync-0.0.1.vsix
+code --install-extension terraform-cloud-sync-0.1.0.vsix
 
 ```
 
