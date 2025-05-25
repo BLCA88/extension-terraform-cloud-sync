@@ -11,9 +11,9 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/BLCA88/extension-terraform-sync"
+    "url": "https://github.com/BLCA88/extension-terraform-cloud-sync"
   },
-  "homepage": "https://github.com/joseantunez/terraform-cloud-sync#readme",
+  "homepage": "https://github.com/BLCA88/extension-terraform-cloud-sync/blob/main/README.md",
   "version": "0.1.0",
   "type": "module",
   "engines": {
