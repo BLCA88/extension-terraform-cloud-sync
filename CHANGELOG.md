@@ -6,6 +6,12 @@ Este proyecto sigue las reglas de [Versionado Semántico](https://semver.org/lan
 
 ---
 
+## [0.1.1] - 2025-05-26
+
+### Corregido
+
+- Error al intentar cargar tfvars a terraform cloud.
+
 ## [0.1.0] - 2025-05-25
 
 ### Agregado

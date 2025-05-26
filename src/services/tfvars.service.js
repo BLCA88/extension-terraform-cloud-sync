@@ -7,7 +7,7 @@ async function getExistingVariables(workspaceId, token) {
     token,
   });
 
-  return data.data;
+  return data.data.data;
 }
 
 export async function uploadTfvarsToWorkspace(workspaceId, filePath, token) {
@@ -53,7 +53,7 @@ export async function uploadTfvarsToWorkspace(workspaceId, filePath, token) {
       data: payload,
     });
 
-    return res;
+    return res.data;
   });
 
   return Promise.all(createOrUpdate);
