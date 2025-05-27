@@ -1,8 +1,5 @@
 # Terraform Cloud Sync
 
-![Extensión VSCode](https://img.shields.io/badge/vscode-extensión-blue?logo=visualstudiocode)
-![Versión](https://img.shields.io/badge/version-0.1.0-blue)
-
 > Sincronice `.tfvars` y verifique ejecuciones desde espacios de trabajo de Terraform Cloud, directamente desde VSCode..
 
 ---
@@ -68,7 +65,7 @@ code --install-extension terraform-cloud-sync-0.1.0.vsix
 
 ## Capturas de pantalla
 
-> ![Conectarse](https://private-user-images.githubusercontent.com/108241395/447305361-adb6c566-5bde-4f5a-a49e-9cb2b4772024.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDgxNTA5MDAsIm5iZiI6MTc0ODE1MDYwMCwicGF0aCI6Ii8xMDgyNDEzOTUvNDQ3MzA1MzYxLWFkYjZjNTY2LTViZGUtNGY1YS1hNDllLTljYjJiNDc3MjAyNC5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUwNTI1JTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MDUyNVQwNTIzMjBaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT0wNDZmMmY2MDY2NmZjZDkzYzAzMGJmZGM1MzY4MmJkOTFjMGJiNGI5MTA2OTk3MzQwNzU2MDgyYTM5YmM0MGI5JlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.PMZ1gNJHIiBBYCNC2s993nntPUW59zvBLZoo66recpY)
+>
 
 ---
 
