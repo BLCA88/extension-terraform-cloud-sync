@@ -14,7 +14,7 @@
     "url": "https://github.com/BLCA88/extension-terraform-cloud-sync"
   },
   "homepage": "https://github.com/BLCA88/extension-terraform-cloud-sync/blob/main/README.md",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "type": "module",
   "engines": {
     "vscode": "^1.90.0"
