@@ -6,9 +6,24 @@ Este proyecto sigue las reglas de [Versionado Semántico](https://semver.org/lan
 
 ---
 
+## [0.1.2] - 2025-05-27
+
+### Corregido
+
+- Error al refrescar los _runs_.
+
+### Agregado
+
+- Controlador de arbol de ejecuciones.
+- Agregado de traducciones de mensajes en arbol de ejecuciones.
+
+---
+
 ## [0.1.1] - 2025-05-26
 
 ### Corregido
+
+---
 
 - Error al intentar cargar tfvars a terraform cloud.
 
