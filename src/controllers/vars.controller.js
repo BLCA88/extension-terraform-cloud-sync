@@ -6,13 +6,21 @@ import {
 } from "../services/tfvars.service.js";
 
 export async function uploadTfvars(item, token) {
-  const rootFolder = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+  let rootFolder = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
 
   if (!rootFolder) {
-    vscode.window.showErrorMessage(
-      "❌ " + (translate.noWorkspace || "No workspace folder is open.")
-    );
-    return;
+    const selectedFolder = await vscode.window.showOpenDialog({
+      canSelectFolders: true,
+      canSelectMany: false,
+      openLabel: "Seleccionar carpeta",
+    });
+
+    if (!selectedFolder || selectedFolder.length === 0) {
+      vscode.window.showWarningMessage("No se seleccionó ninguna carpeta.");
+      return;
+    }
+
+    rootFolder = selectedFolder[0].fsPath;
   }
 
   const fileUri = await vscode.window.showOpenDialog({
@@ -35,13 +43,21 @@ export async function uploadTfvars(item, token) {
 }
 
 export async function downloadTfvars(item, token) {
-  const rootFolder = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+  let rootFolder = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
 
   if (!rootFolder) {
-    vscode.window.showErrorMessage(
-      "❌ " + (translate.noWorkspace || "No workspace folder is open.")
-    );
-    return;
+    const selectedFolder = await vscode.window.showOpenDialog({
+      canSelectFolders: true,
+      canSelectMany: false,
+      openLabel: "Seleccionar carpeta",
+    });
+
+    if (!selectedFolder || selectedFolder.length === 0) {
+      vscode.window.showWarningMessage("No se seleccionó ninguna carpeta.");
+      return;
+    }
+
+    rootFolder = selectedFolder[0].fsPath;
   }
 
   const defaultUri = vscode.Uri.file(`${rootFolder}/${item.label}.auto.tfvars`);

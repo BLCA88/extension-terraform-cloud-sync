@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import {
   getRunsForWorkspace,
+  getRun,
   applyRun,
   getPlanDetails,
   getGitInfoFromRun,
@@ -70,6 +71,11 @@ export class RunDetailsPanel {
 
       const terraformVersion = run.attributes["terraform-version"];
       const canApply = status === "planned";
+
+      let runIdDetails = await getRun(runId, this.token);
+      if (runIdDetails.attributes.message === "Triggered via CLI") {
+        console.log(runIdDetails.relationships["confirmed-by"].data.id);
+      }
 
       let gitInfo;
       try {

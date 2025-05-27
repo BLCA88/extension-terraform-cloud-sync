@@ -1,4 +1,5 @@
 import { callTFCApi } from "../api/tfc.api.js";
+import { translate } from "../utils/i18n.js";
 
 export async function getRunsForWorkspace(workspaceId, token) {
   try {
@@ -12,7 +13,7 @@ export async function getRunsForWorkspace(workspaceId, token) {
   }
 }
 
-export async function getRuns(RunId, token) {
+export async function getRun(RunId, token) {
   try {
     const res = await callTFCApi({
       url: `/runs/${RunId}`,
@@ -27,11 +28,16 @@ export async function getRuns(RunId, token) {
 export async function applyRun(runId, token) {
   const url = `/runs/${runId}/actions/apply`;
 
+  const body = {
+    comment: translate.applySuccessBody,
+  };
+
   const response = await callTFCApi({
     method: "post",
     url,
     token,
-    data: {},
+    data: body,
+    validateStatus: (status) => status === 202,
   });
 
   return response.status === 202;

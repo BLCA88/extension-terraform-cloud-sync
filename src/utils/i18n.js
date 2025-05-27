@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import os from "os";
 
-const username = os.userInfo().username;
+export const username = os.userInfo().username;
 
 export const i18n = {
   en: {
@@ -46,13 +46,24 @@ export const i18n = {
     tokenOptionTitle: "Terraform Cloud Sync",
     tokenOptionPlaceholder: "Choose a method to enter your token",
     tokenOptionCLI: "Use the token",
+    tokenOptionCLIDescription:
+      "Using token from Terraform CLI configuration file",
     tokenOptionManual: "Manually token",
+    tokenOptionManualDescription: "Enter token manually",
+    tokenOptionWebDescription:
+      "Generate a new token from the HCP Terraform page",
     tokenOptionWeb: "Open Terraform Cloud",
     pendingRun: `⚠️ The workspace is waiting for the next execution to continue: `,
     commitFetchError: "❌ Commit information not available: ",
     planFetchError: "❌ Plan information not available: ",
     applySuccess: "✅ Apply success.",
     applyError: (err) => `❌ Apply error: ${err}`,
+    applySuccessBody: `✅ Apply success from VSCode by ${username}`,
+    errorSession: "❌ Session failed.",
+    warningRunsProvider: "⚠️ No run provider available.",
+    runsRefreshMessage: "🔁 Runs updated from Terraform Cloud",
+    warningWorkspacesMessage: "⚠️ Workspaces not available.",
+    worspacesRefreshMessage: "🔁 Workspaces updated successfully.",
   },
   es: {
     workspace: "Espacio de trabajo",
@@ -110,6 +121,12 @@ export const i18n = {
     planFetchError: "❌ Error al obtener el plan: ",
     applySuccess: "✅ Apply confirmado.",
     applyError: (err) => `❌ Error al aplicar: ${err}`,
+    applySuccessBody: `✅ Apply confirmado desde VSCode por ${username}`,
+    errorSession: "❌ No se pudo iniciar sesión.",
+    warningRunsProvider: "⚠️ No hay proveedor de runs disponible.",
+    runsRefreshMessage: "🔁 Runs actualizados desde Terraform Cloud.",
+    warningWorkspacesMessage: "⚠️ Workspaces no disponibles.",
+    worspacesRefreshMessage: "🔁 Workspaces actualizados correctamente.",
   },
 };
 

@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { RunTreeItem } from "./tf-item.js";
+import { resolveRunsItems } from "../controllers/runs-tree.controller.js";
 
 class RunsTreeProvider {
   constructor() {
@@ -8,30 +9,32 @@ class RunsTreeProvider {
     this.runs = [];
   }
 
-  setRuns(rawRuns, workspaceId, workspaceName) {
-    this.runs = rawRuns.map(
-      (run) =>
-        new RunTreeItem(
-          `${run.attributes.message || run.attributes.source}`,
-          run.id,
-          run.attributes.status,
-          run.attributes["created-at"],
-          workspaceId,
-          workspaceName
-        )
-    );
-    this._onDidChangeTreeData.fire(undefined);
+  setContext({ workspaceId, workspaceName, token, organization }) {
+    this.workspaceId = workspaceId;
+    this.workspaceName = workspaceName;
+    this.token = token;
+    this.organization = organization;
   }
 
   getTreeItem(element) {
     return element;
   }
 
-  getChildren() {
-    return this.runs;
+  async getChildren() {
+    if (!this.workspaceId || !this.token || !this.organization) return [];
+    return await resolveRunsItems(
+      this.workspaceId,
+      this.workspaceName,
+      this.token,
+      this.organization
+    );
+  }
+
+  refresh() {
+    this._onDidChangeTreeData.fire(undefined);
   }
 }
 
 const runsTreeProvider = new RunsTreeProvider();
 
-export { RunTreeItem, RunsTreeProvider, runsTreeProvider };
+export { RunsTreeProvider, runsTreeProvider };

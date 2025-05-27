@@ -1,8 +1,11 @@
 import * as vscode from "vscode";
 import { TfCloudTreeProvider } from "./tree-provider.js";
 import { RunsTreeProvider } from "./runs-tree-provider.js";
-import { getRunsForWorkspace } from "../services/run-details.service.js";
 import { showRunDetails } from "../panels/run-details-panel.js";
+
+let currentRunsProvider = null;
+let currentWorkspaceId = null;
+let currentWorkspaceName = null;
 
 export async function createTreeViews(context, session) {
   const token = session.getToken();
@@ -31,16 +34,18 @@ export async function createTreeViews(context, session) {
       label = selected.label;
       extensionUri = context.extensionUri;
 
-      const runs = await getRunsForWorkspace(selected.workspaceId, token);
-      runsProvider.setRuns(runs, workspaceId, label);
+      runsProvider.setContext({
+        workspaceId,
+        workspaceName: label,
+        token,
+        organization: org,
+      });
 
-      context.subscriptions.push(
-        vscode.commands.registerCommand("tfcloud.refreshRuns", async () => {
-          const runs = await getRunsForWorkspace(workspaceId, token);
-          runsProvider.setRuns(runs, workspaceId, selected.label);
-          vscode.window.showInformationMessage("🔄 Runs actualizados.");
-        })
-      );
+      runsProvider.refresh();
+
+      currentRunsProvider = runsProvider;
+      currentWorkspaceId = workspaceId;
+      currentWorkspaceName = label;
     }
   });
 
@@ -58,5 +63,7 @@ export async function createTreeViews(context, session) {
     }
   });
 
-  return { treeView, runsView, treeProvider };
+  return { treeView, runsView, treeProvider, runsProvider };
 }
+
+export { currentRunsProvider, currentWorkspaceId, currentWorkspaceName };
