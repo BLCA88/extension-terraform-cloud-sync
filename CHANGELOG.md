@@ -6,6 +6,18 @@ Este proyecto sigue las reglas de [Versionado Semántico](https://semver.org/lan
 
 ---
 
+## [0.1.2] - 2025-05-29
+
+### Corregido
+
+- Error al subir variables _HCL_.
+
+### Agregado
+
+- Se agrega libreria _@cdktf/hcl2json_ para parsear variables de tipo HCL
+
+---
+
 ## [0.1.2] - 2025-05-27
 
 ### Corregido

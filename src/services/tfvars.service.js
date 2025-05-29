@@ -1,4 +1,5 @@
 import fs from "fs";
+import { parse } from "@cdktf/hcl2json";
 import { callTFCApi } from "../api/tfc.api.js";
 
 async function getExistingVariables(workspaceId, token) {
@@ -10,18 +11,27 @@ async function getExistingVariables(workspaceId, token) {
   return data.data.data;
 }
 
-export async function uploadTfvarsToWorkspace(workspaceId, filePath, token) {
-  const content = fs.readFileSync(filePath, "utf8");
-  const lines = content.split(/\r?\n/).filter((line) => line.includes("="));
+function flattenValue(value) {
+  if (typeof value === "string") return value;
+  return JSON.stringify(value);
+}
 
-  const vars = lines.map((line) => {
-    const [key, value] = line.split("=").map((s) => s.trim());
-    return { key, value: value.replace(/^"|"$/g, "") };
-  });
+function isHcl(value) {
+  return typeof value !== "string";
+}
+
+export async function uploadTfvarsToWorkspace(workspaceId, filePath, token) {
+  const hclContent = fs.readFileSync(filePath, "utf8");
+  const parsed = await parse(filePath, hclContent); // convierte a JSON
 
   const existingVars = await getExistingVariables(workspaceId, token);
 
-  const createOrUpdate = vars.map(async ({ key, value }) => {
+  const entries = Object.entries(parsed);
+
+  const createOrUpdate = entries.map(async ([key, value]) => {
+    const stringifiedValue = flattenValue(value);
+    const hcl = isHcl(value);
+
     const existing = existingVars.find((v) => v.attributes.key === key);
     const method = existing ? "patch" : "post";
     const url = existing
@@ -33,9 +43,9 @@ export async function uploadTfvarsToWorkspace(workspaceId, filePath, token) {
         type: "vars",
         attributes: {
           key,
-          value,
+          value: stringifiedValue,
           category: "terraform",
-          hcl: false,
+          hcl,
           sensitive: false,
         },
         relationships: {
