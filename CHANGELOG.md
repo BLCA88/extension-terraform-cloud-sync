@@ -6,7 +6,19 @@ Este proyecto sigue las reglas de [Versionado Semántico](https://semver.org/lan
 
 ---
 
-## [0.1.2] - 2025-05-29
+## [0.1.4] - 2025-06-04
+
+### Corregido
+
+- Error 429 al subir variables _HCL_.
+
+### Agregado
+
+- Formateo de variables al descargar.
+
+---
+
+## [0.1.3] - 2025-05-29
 
 ### Corregido
 

@@ -3,12 +3,11 @@ import { parse } from "@cdktf/hcl2json";
 import { callTFCApi } from "../api/tfc.api.js";
 
 async function getExistingVariables(workspaceId, token) {
-  const data = await callTFCApi({
+  const res = await callTFCApi({
     url: `/workspaces/${workspaceId}/vars`,
     token,
   });
-
-  return data.data.data;
+  return res.data.data;
 }
 
 function flattenValue(value) {
@@ -20,53 +19,100 @@ function isHcl(value) {
   return typeof value !== "string";
 }
 
-export async function uploadTfvarsToWorkspace(workspaceId, filePath, token) {
-  const hclContent = fs.readFileSync(filePath, "utf8");
-  const parsed = await parse(filePath, hclContent); // convierte a JSON
-
-  const existingVars = await getExistingVariables(workspaceId, token);
-
-  const entries = Object.entries(parsed);
-
-  const createOrUpdate = entries.map(async ([key, value]) => {
-    const stringifiedValue = flattenValue(value);
-    const hcl = isHcl(value);
-
-    const existing = existingVars.find((v) => v.attributes.key === key);
-    const method = existing ? "patch" : "post";
-    const url = existing
-      ? `/vars/${existing.id}`
-      : `/workspaces/${workspaceId}/vars`;
-
-    const payload = {
-      data: {
-        type: "vars",
-        attributes: {
-          key,
-          value: stringifiedValue,
-          category: "terraform",
-          hcl,
-          sensitive: false,
-        },
-        relationships: {
-          workspace: {
-            data: { type: "workspaces", id: workspaceId },
-          },
+function formatPayload(key, value, hcl, workspaceId) {
+  return {
+    data: {
+      type: "vars",
+      attributes: {
+        key,
+        value,
+        category: "terraform",
+        hcl,
+        sensitive: false,
+      },
+      relationships: {
+        workspace: {
+          data: { type: "workspaces", id: workspaceId },
         },
       },
-    };
+    },
+  };
+}
 
-    const res = await callTFCApi({
-      method,
-      url,
-      token,
-      data: payload,
-    });
+export async function uploadTfvarsToWorkspace(workspaceId, filePath, token) {
+  const hclContent = fs.readFileSync(filePath, "utf8");
+  const parsed = await parse(filePath, hclContent);
+  const parsedVars = Object.entries(parsed);
 
-    return res.data;
-  });
+  const existingVars = await getExistingVariables(workspaceId, token);
+  const existingMap = Object.fromEntries(
+    existingVars.map((v) => [v.attributes.key, v])
+  );
 
-  return Promise.all(createOrUpdate);
+  // Crear o actualizar
+  for (const [key, rawValue] of parsedVars) {
+    const value = flattenValue(rawValue);
+    const hcl = isHcl(rawValue);
+    const payload = formatPayload(key, value, hcl, workspaceId);
+    const existing = existingMap[key];
+
+    if (existing) {
+      if (
+        existing.attributes.value !== value ||
+        existing.attributes.hcl !== hcl
+      ) {
+        await callTFCApi({
+          method: "patch",
+          url: `/vars/${existing.id}`,
+          token,
+          data: payload,
+        });
+      }
+    } else {
+      await callTFCApi({
+        method: "post",
+        url: `/workspaces/${workspaceId}/vars`,
+        token,
+        data: payload,
+      });
+    }
+  }
+
+  const parsedKeys = new Set(parsedVars.map(([key]) => key));
+
+  for (const key in existingMap) {
+    if (!parsedKeys.has(key)) {
+      await callTFCApi({
+        method: "delete",
+        url: `/vars/${existingMap[key].id}`,
+        token,
+      });
+    }
+  }
+}
+
+function formatValue(value, hcl) {
+  if (hcl) {
+    try {
+      const parsed = JSON.parse(value);
+      if (Array.isArray(parsed)) {
+        return `[\n  ${parsed.map((v) => JSON.stringify(v)).join(",\n  ")}\n]`;
+      } else if (typeof parsed === "object" && parsed !== null) {
+        return (
+          "{\n" +
+          Object.entries(parsed)
+            .map(([k, v]) => `  ${JSON.stringify(k)} = ${JSON.stringify(v)}`)
+            .join("\n") +
+          "\n}"
+        );
+      }
+    } catch {
+      return value;
+    }
+    return value;
+  } else {
+    return `"${value.replace(/"/g, '\\"')}"`;
+  }
 }
 
 export async function downloadTfvarsFromWorkspace(
@@ -81,8 +127,11 @@ export async function downloadTfvarsFromWorkspace(
   );
 
   const content = terraformVars
-    .map((v) => `${v.attributes.key} = ${v.attributes.value}`)
-    .join("\n");
+    .map((v) => {
+      const { key, value, hcl } = v.attributes;
+      return `${key} = ${formatValue(value, hcl)}`;
+    })
+    .join("\n\n");
 
-  fs.writeFileSync(outputPath, content);
+  fs.writeFileSync(outputPath, content + "\n");
 }
